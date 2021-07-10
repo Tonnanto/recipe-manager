@@ -1,28 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Recipe Manager',
-      theme: ThemeData(
-        primarySwatch: Colors.lightGreen,
-        primaryTextTheme: TextTheme(
-            // White AppBar Text
-            headline6: TextStyle(
-                color: Colors.white
-            )
-        )
-      ),
-      home: RecipeBookList(title: 'My Recipe Books'),
-    );
-  }
-}
+import 'package:recipe_manager/views/recipe_list_view.dart';
 
 class RecipeBookList extends StatefulWidget {
   RecipeBookList({Key? key, required this.title}) : super(key: key);
@@ -68,17 +46,10 @@ class _RecipeBookListState extends State<RecipeBookList> {
 
   void _pushRecipeBookPage(String recipeBookName) {
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (BuildContext context) {
-        final _recipeBookName = recipeBookName;
-        return Scaffold(
-          appBar: AppBar(
-            title: Text(_recipeBookName),
-          ),
-          body: Center(
-            child: Image.network("https://picsum.photos/200/300")
-          ),
-        );
-      })
+        MaterialPageRoute(builder: (BuildContext context) {
+          final _recipeBookName = recipeBookName;
+          return RecipeList(recipeBookName: _recipeBookName);
+        })
     );
   }
 }
