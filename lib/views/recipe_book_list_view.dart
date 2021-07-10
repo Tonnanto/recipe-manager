@@ -1,12 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:recipe_manager/models/recipe_book_model.dart';
 import 'package:recipe_manager/views/recipe_list_view.dart';
 
 class RecipeBookList extends StatefulWidget {
-  RecipeBookList({Key? key, required this.title}) : super(key: key);
+  RecipeBookList({Key? key, required this.title, required this.recipeBooks}) : super(key: key);
 
   final String title;
-  final Iterable<String> _recipeBooks = <String>[]; // TODO: create RecipeBook class
+  final List<RecipeBook> recipeBooks;// = <RecipeBook>[];
 
   @override
   State<StatefulWidget> createState() => _RecipeBookListState();
@@ -24,31 +26,45 @@ class _RecipeBookListState extends State<RecipeBookList> {
   }
 
   Widget _buildBody() {
-    return ListView.builder(
-        padding: EdgeInsets.all(16),
-        itemBuilder: (context, i) {
-          // Divider
-          if (i.isOdd) return Divider();
-
-          return _buildRow("Antons Recipes");
+    return PageView.builder(
+        itemCount: widget.recipeBooks.length,
+        controller: PageController(viewportFraction: 0.55),
+        itemBuilder: (BuildContext context, int index) {
+          return _buildRecipeBookColumn(index);
         }
+
     );
   }
 
-  Widget _buildRow(String recipeBookName) {
-    return ListTile(
-      title: Text(recipeBookName),
+
+
+
+  Widget _buildRecipeBookColumn(int index) {
+    return GestureDetector(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.menu_book_outlined,
+            size: 180,
+          ),
+          Padding(
+              padding: EdgeInsets.all(16),
+              child: Text(widget.recipeBooks[index].name)
+          )
+        ],
+      ),
       onTap: () {
-        _pushRecipeBookPage(recipeBookName);
+        _pushRecipeBookPage(index);
       },
     );
   }
 
-  void _pushRecipeBookPage(String recipeBookName) {
+  void _pushRecipeBookPage(int index) {
     Navigator.of(context).push(
         MaterialPageRoute(builder: (BuildContext context) {
-          final _recipeBookName = recipeBookName;
-          return RecipeList(recipeBookName: _recipeBookName);
+          final _recipeBook = widget.recipeBooks[index];
+          return RecipeList(recipeBook: _recipeBook);
         })
     );
   }

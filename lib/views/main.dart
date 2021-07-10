@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:recipe_manager/models/recipe_book_model.dart';
 import 'package:recipe_manager/views/recipe_book_list_view.dart';
 
 void main() {
@@ -20,7 +21,13 @@ class MyApp extends StatelessWidget {
             )
         )
       ),
-      home: RecipeBookList(title: 'My Recipe Books'),
+      home: RecipeBookList(
+        title: 'My Recipe Books',
+        recipeBooks: [
+          RecipeBook("Antons Recipes"),
+          RecipeBook("Felix Recipe Book")
+        ],
+      ),
     );
   }
 }
