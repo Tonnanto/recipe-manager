@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:recipe_manager/models/recipe_book_model.dart';
+import 'package:recipe_manager/models/recipe_detail_model.dart';
 import 'package:recipe_manager/models/recipe_model.dart';
 import 'package:recipe_manager/views/recipe_book_list_view.dart';
 
@@ -24,27 +25,60 @@ class MyApp extends StatelessWidget {
       ),
       home: RecipeBookList(
         title: 'My Recipe Books',
-        recipeBooks: _getTestRecipeBooks(),
+        recipeBooks: _getDemoRecipeBooks(),
       ),
     );
   }
 
   /// Returns some demo recipe books
-  List<RecipeBook> _getTestRecipeBooks() {
+  List<RecipeBook> _getDemoRecipeBooks() {
 
     RecipeBook recipeBook1 = RecipeBook("Antons Recipes");
-    recipeBook1.recipes.addAll([
-      Recipe("Recipe 1"),
-      Recipe("Recipe 2"),
-      Recipe("Recipe 3"),
-    ]);
+    recipeBook1.recipes.addAll(_getDemoRecipes());
 
     RecipeBook recipeBook2 = RecipeBook("Felix Recipe Book");
 
-    return <RecipeBook>[
-      recipeBook1,
-      recipeBook2
+    return [recipeBook1, recipeBook2];
+  }
+
+  /// Returns some demo recipes
+  List<Recipe> _getDemoRecipes() {
+
+    Recipe recipe1 = Recipe("Bircher Müsli");
+    recipe1.images = [
+      Image.asset("")
+    ];
+    recipe1.ingredients = [
+      Ingredient("Haferflocken", UnitAmount(Unit.GRAM, 150)),
+      Ingredient("Sahne", UnitAmount(Unit.GRAM, 200)),
+      Ingredient("Milch", UnitAmount(Unit.GRAM, 200)),
+      Ingredient("Agaven Sirup oder Honig", UnitAmount(Unit.GRAM, 60)),
+      Ingredient("Naturjoghurt", UnitAmount(Unit.GRAM, 150)),
+      Ingredient("6-Korn-Mischung", UnitAmount(Unit.GRAM, 80)),
+      Ingredient("Mandeln", UnitAmount(Unit.GRAM, 60)),
+      Ingredient("Apfel", UnitAmount(Unit.PCS, 1)),
+      Ingredient("Banane", UnitAmount(Unit.PCS, 2))
+    ];
+    recipe1.preparationSteps = [
+      PreparationStep("Haferflocken mit Sahne, Milch, Agaven Sirup und Naturjoghurt mischen und über Nacht zugedeckt ziehen lassen."),
+      PreparationStep("6-Korn-Mischung in den Thermomix geben und 20 Sekunden/Stufe 7 schroten. Mit kaltem Wasser bedeckt im Mixtopf über Nacht ziehen lassen."),
+      PreparationStep("Morgens Mandeln zu den geschroteten Körnern geben und 3 Sekunden/Stufe 6 zerkleinern."),
+      PreparationStep("Apfel und Bananen zugeben und 3 Sekunden/Stufe 5."),
+      PreparationStep("Zum Schluss die Haferflocken-Mischung dazugeben und 15 Sekunden/Linkslauf/Stufe 3 mischen.")
+    ];
+
+
+    Recipe recipe2 = Recipe("Recipe 2");
+    Recipe recipe3 = Recipe("Recipe 3");
+    Recipe recipe4 = Recipe("Recipe 4");
+
+    return [
+      recipe1,
+      recipe2,
+      recipe3,
+      recipe4
     ];
   }
+
 }
 
