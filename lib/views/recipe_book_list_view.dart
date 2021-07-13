@@ -36,9 +36,6 @@ class _RecipeBookListState extends State<RecipeBookList> {
     );
   }
 
-
-
-
   Widget _buildRecipeBookColumn(int index) {
     return GestureDetector(
       child: Column(
@@ -55,12 +52,13 @@ class _RecipeBookListState extends State<RecipeBookList> {
         ],
       ),
       onTap: () {
-        _pushRecipeBookPage(index);
+        _pushRecipeListPage(index);
       },
     );
   }
 
-  void _pushRecipeBookPage(int index) {
+  /// Pushes the page that displays the content of the recipe book
+  void _pushRecipeListPage(int index) {
     Navigator.of(context).push(
         MaterialPageRoute(builder: (BuildContext context) {
           final _recipeBook = widget.recipeBooks[index];
