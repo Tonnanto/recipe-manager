@@ -33,12 +33,15 @@ class MyApp extends StatelessWidget {
   /// Returns some demo recipe books
   List<RecipeBook> _getDemoRecipeBooks() {
 
-    RecipeBook recipeBook1 = RecipeBook("Antons Recipes");
+    RecipeBook recipeBook1 = RecipeBook("Antons Recipes", RecipeBookColor.banana, RecipeBookIcon.cooking_hat);
     recipeBook1.recipes.addAll(_getDemoRecipes());
 
-    RecipeBook recipeBook2 = RecipeBook("Felix Recipe Book");
+    RecipeBook recipeBook2 = RecipeBook("Felix Recipe Book", RecipeBookColor.flora, RecipeBookIcon.ingredients);
+    RecipeBook recipeBook3 = RecipeBook("Julia's Back Rezepte", RecipeBookColor.cantaloupe, RecipeBookIcon.dishes);
+    RecipeBook recipeBook4 = RecipeBook("Kochbuch von Silke", RecipeBookColor.carnation, RecipeBookIcon.pan);
+    RecipeBook recipeBook5 = RecipeBook("Holgers BBQ", RecipeBookColor.salmon, RecipeBookIcon.man);
 
-    return [recipeBook1, recipeBook2];
+    return [recipeBook1, recipeBook2, recipeBook3, recipeBook4, recipeBook5];
   }
 
   /// Returns some demo recipes
