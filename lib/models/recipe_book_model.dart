@@ -2,9 +2,8 @@
 
 import 'dart:async';
 import 'dart:typed_data';
-import 'dart:ui' as ui;
+import 'dart:ui';
 
-import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 import 'package:recipe_manager/models/recipe_model.dart';
 import 'package:recipe_manager/utilities/image_utils.dart';
@@ -15,23 +14,7 @@ class RecipeBook {
   List<Recipe> recipes = <Recipe>[];
 
   RecipeBook(this.name, RecipeBookColor color, RecipeBookIcon icon) {
-    this.image = _createImage(color, icon);
-
-  }
-
-  Future<ByteData?> _createImage(RecipeBookColor color, RecipeBookIcon glyph) async {
-    ui.PictureRecorder recorder = new ui.PictureRecorder();
-    Canvas canvas = new Canvas(recorder);
-
-    ui.Image bookImage = await loadUiImage('assets/images/recipe_books/recipeBook_${color.toString().split('.').last}.png');
-    ui.Image glyphImage = await loadUiImage('assets/images/recipe_book_glyphs/${glyph.toString().split('.').last}.png');
-
-    canvas.drawImage(bookImage, Offset.zero, Paint());
-    canvas.drawImage(glyphImage, Offset(bookImage.width * 0.57 - glyphImage.width * 0.5, bookImage.height * 0.3 - glyphImage.height * 0.5), Paint());
-
-    ui.Picture p = recorder.endRecording();
-    ui.Image image = await p.toImage(bookImage.width, bookImage.height);
-    return image.toByteData(format: ui.ImageByteFormat.png);
+    this.image = createRecipeBookImage(color, icon);
   }
 }
 
@@ -39,6 +22,43 @@ enum RecipeBookColor {
   salmon, cantaloupe, banana, honeydew, flora, spindrift, ice, sky, orchid, lavender, bubblegum, carnation
 }
 
+extension RecipeBookColorExtension on RecipeBookColor {
+  Color color() {
+    switch (this) {
+      case RecipeBookColor.salmon:
+        return Color.fromRGBO(255, 126, 121, 1);
+      case RecipeBookColor.cantaloupe:
+        return Color.fromRGBO(255, 212, 121, 1);
+      case RecipeBookColor.banana:
+        return Color.fromRGBO(255, 252, 121, 1);
+      case RecipeBookColor.honeydew:
+        return Color.fromRGBO(212, 251, 121, 1);
+      case RecipeBookColor.flora:
+        return Color.fromRGBO(115, 250, 121, 1);
+      case RecipeBookColor.spindrift:
+        return Color.fromRGBO(115, 252, 214, 1);
+      case RecipeBookColor.ice:
+        return Color.fromRGBO(115, 253, 255, 1);
+      case RecipeBookColor.sky:
+        return Color.fromRGBO(118, 214, 255, 1);
+      case RecipeBookColor.orchid:
+        return Color.fromRGBO(122, 129, 255, 1);
+      case RecipeBookColor.lavender:
+        return Color.fromRGBO(215, 131, 255, 1);
+      case RecipeBookColor.bubblegum:
+        return Color.fromRGBO(255, 133, 255, 1);
+      case RecipeBookColor.carnation:
+        return Color.fromRGBO(255, 138, 216, 1);
+    }
+  }
+}
+
 enum RecipeBookIcon {
   cooking_hat, dishes, ingredients, man, pan
+}
+
+extension RecipeBookIconExtension on RecipeBookIcon {
+  String imagePath() {
+    return "assets/images/recipe_book_glyphs/${this.toString().split('.').last}.png";
+  }
 }
