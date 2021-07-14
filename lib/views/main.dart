@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:recipe_manager/models/recipe_book_model.dart';
 import 'package:recipe_manager/models/recipe_detail_model.dart';
 import 'package:recipe_manager/models/recipe_model.dart';
-import 'package:recipe_manager/views/recipe_book_list_view.dart';
+import 'package:recipe_manager/views/recipe_book_list_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
             )
         )
       ),
-      home: RecipeBookList(
+      home: RecipeBookListPage(
         title: 'My Recipe Books',
         recipeBooks: _getDemoRecipeBooks(),
       ),

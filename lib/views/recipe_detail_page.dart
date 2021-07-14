@@ -3,17 +3,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:recipe_manager/models/recipe_model.dart';
 
-class RecipeDetail extends StatefulWidget {
+class RecipeDetailPage extends StatefulWidget {
   final Recipe recipe;
 
-  RecipeDetail({Key? key, required this.recipe}) : super(key: key);
+  RecipeDetailPage({Key? key, required this.recipe}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _RecipeDetailState();
+  State<StatefulWidget> createState() => _RecipeDetailPageState();
 
 }
 
-class _RecipeDetailState extends State<RecipeDetail> {
+class _RecipeDetailPageState extends State<RecipeDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

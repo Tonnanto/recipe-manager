@@ -3,18 +3,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:recipe_manager/models/recipe_book_model.dart';
-import 'package:recipe_manager/views/recipe_detail_view.dart';
+import 'package:recipe_manager/views/recipe_detail_page.dart';
 
-class RecipeList extends StatefulWidget {
+class RecipeListPage extends StatefulWidget {
   final RecipeBook recipeBook;
 
-  RecipeList({Key? key, required this.recipeBook}) : super(key: key);
+  RecipeListPage({Key? key, required this.recipeBook}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _RecipeListState();
+  State<StatefulWidget> createState() => _RecipeListPageState();
 }
 
-class _RecipeListState extends State<RecipeList> {
+class _RecipeListPageState extends State<RecipeListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,7 +52,7 @@ class _RecipeListState extends State<RecipeList> {
     Navigator.of(context).push(
         MaterialPageRoute(builder: (BuildContext context) {
           final _recipe = widget.recipeBook.recipes[index];
-          return RecipeDetail(recipe: _recipe);
+          return RecipeDetailPage(recipe: _recipe);
         })
     );
   }

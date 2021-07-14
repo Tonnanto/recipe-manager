@@ -4,19 +4,21 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:recipe_manager/models/recipe_book_model.dart';
-import 'package:recipe_manager/views/recipe_list_view.dart';
+import 'package:recipe_manager/views/recipe_list_page.dart';
 
-class RecipeBookList extends StatefulWidget {
-  RecipeBookList({Key? key, required this.title, required this.recipeBooks}) : super(key: key);
+import 'add_recipe_book_page.dart';
+
+class RecipeBookListPage extends StatefulWidget {
+  RecipeBookListPage({Key? key, required this.title, required this.recipeBooks}) : super(key: key);
 
   final String title;
   final List<RecipeBook> recipeBooks;// = <RecipeBook>[];
 
   @override
-  State<StatefulWidget> createState() => _RecipeBookListState();
+  State<StatefulWidget> createState() => _RecipeBookListPageState();
 }
 
-class _RecipeBookListState extends State<RecipeBookList> {
+class _RecipeBookListPageState extends State<RecipeBookListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,6 +26,12 @@ class _RecipeBookListState extends State<RecipeBookList> {
         title: Text(widget.title),
       ),
       body: _buildBody(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          _pushAddRecipeBookPage();
+        },
+        child: const Icon(Icons.add)
+      ),
     );
   }
 
@@ -69,6 +77,7 @@ class _RecipeBookListState extends State<RecipeBookList> {
         if (snapshot.hasData && snapshot.data != null) {
           return Image.memory(Uint8List.view(snapshot.data!.buffer));
         } else {
+          // Recipe Book image not created yet -> display placeholder
           return SizedBox(
             height: 200,
             width: 160,
@@ -83,7 +92,16 @@ class _RecipeBookListState extends State<RecipeBookList> {
     Navigator.of(context).push(
         MaterialPageRoute(builder: (BuildContext context) {
           final _recipeBook = widget.recipeBooks[index];
-          return RecipeList(recipeBook: _recipeBook);
+          return RecipeListPage(recipeBook: _recipeBook);
+        })
+    );
+  }
+
+  /// Pushes the page that allows adding a new recipe book
+  void _pushAddRecipeBookPage() {
+    Navigator.of(context).push(
+        MaterialPageRoute(builder: (BuildContext context) {
+          return AddRecipeBookPage();
         })
     );
   }
