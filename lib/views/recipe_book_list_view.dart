@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -41,18 +43,37 @@ class _RecipeBookListState extends State<RecipeBookList> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.menu_book_outlined,
-            size: 180,
+          SizedBox(
+            width: 180,
+            child: _buildRecipeBookImage(index)
           ),
           Padding(
               padding: EdgeInsets.all(16),
-              child: Text(widget.recipeBooks[index].name)
+              child: Text(
+                widget.recipeBooks[index].name,
+                style: TextStyle(fontSize: 18)
+              )
           )
         ],
       ),
       onTap: () {
         _pushRecipeListPage(index);
+      },
+    );
+  }
+
+  Widget _buildRecipeBookImage(int index) {
+    return FutureBuilder(
+      future: widget.recipeBooks[index].image,
+      builder: (BuildContext context, AsyncSnapshot<ByteData?> snapshot) {
+        if (snapshot.hasData && snapshot.data != null) {
+          return Image.memory(Uint8List.view(snapshot.data!.buffer));
+        } else {
+          return SizedBox(
+            height: 200,
+            width: 160,
+          );
+        }
       },
     );
   }
