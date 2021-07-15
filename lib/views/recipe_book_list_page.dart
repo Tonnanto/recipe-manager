@@ -103,6 +103,12 @@ class _RecipeBookListPageState extends State<RecipeBookListPage> {
         MaterialPageRoute(builder: (BuildContext context) {
           return AddRecipeBookPage();
         })
-    );
+    ).then((newRecipeBook) {
+      // New RecipeBook has been created
+      setState(() {
+        if (newRecipeBook != null)
+          widget.recipeBooks.add(newRecipeBook);
+      });
+    });
   }
 }

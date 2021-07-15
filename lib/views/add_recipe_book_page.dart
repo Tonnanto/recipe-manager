@@ -38,7 +38,6 @@ class _AddRecipeBookPageState extends State<AddRecipeBookPage> {
 
   Widget _buildBody() {
     return ListView(
-      // mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         Container(
           height: 200,
@@ -66,80 +65,91 @@ class _AddRecipeBookPageState extends State<AddRecipeBookPage> {
         Container(
           height: 64,
           margin: EdgeInsets.all(8),
-          child: TextFormField(
-            decoration: const InputDecoration(
-              hintText: 'Name',
+          child: Form(
+            key: _formKey,
+            child: TextFormField(
+              decoration: const InputDecoration(
+                hintText: 'Name',
+              ),
+              validator: (String? value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter a name';
+                }
+                return null;
+              },
+              onChanged: (String input) {
+                setState(() {
+                  widget._name = input;
+                });
+              },
             ),
-            validator: (String? value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter a name';
-              }
-              return null;
-            },
-            onChanged: (String input) {
-              setState(() {
-                widget._name = input;
-              });
-            },
           ),
         ),
-        Container(
-          height: 100,
-          margin: EdgeInsets.all(8),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Text(
-                "Color",
-                style: TextStyle(fontSize: 18),
-              ),
-              SizedBox(
-                height: 64,
-                child: ListView.separated(
-                  itemBuilder: (BuildContext context, int index) {
-                    return _buildColorItem(index);
-                  },
-                  separatorBuilder: (BuildContext context, int index) {
-                    return SizedBox(width: 16,);
-                  },
-                  itemCount: RecipeBookColor.values.length,
-                  scrollDirection: Axis.horizontal,
-                ),
-              ),
-            ],
-          ),
-        ),
-        Container(
-          height: 100,
-          margin: EdgeInsets.all(8),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Text(
-                "Icon",
-                style: TextStyle(fontSize: 18),
-              ),
-              SizedBox(
-                height: 64,
-                child: ListView.separated(
-                  itemBuilder: (BuildContext context, int index) {
-                    return _buildGlyphItem(index);
-                  },
-                  separatorBuilder: (BuildContext context, int index) {
-                    return SizedBox(width: 16,);
-                  },
-                  itemCount: RecipeBookIcon.values.length,
-                  scrollDirection: Axis.horizontal,
-                ),
-              ),
-            ],
-          )
-        ),
+        _buildColorPicker(),
+        _buildGlyphPicker(),
         SizedBox(height: 80)
       ]
     );
+  }
+
+  Container _buildColorPicker() {
+    return Container(
+      height: 100,
+      margin: EdgeInsets.all(8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Text(
+            "Color",
+            style: TextStyle(fontSize: 18),
+          ),
+          SizedBox(
+            height: 64,
+            child: ListView.separated(
+              itemBuilder: (BuildContext context, int index) {
+                return _buildColorItem(index);
+              },
+              separatorBuilder: (BuildContext context, int index) {
+                return SizedBox(width: 16,);
+              },
+              itemCount: RecipeBookColor.values.length,
+              scrollDirection: Axis.horizontal,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Container _buildGlyphPicker() {
+    return Container(
+        height: 100,
+        margin: EdgeInsets.all(8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Text(
+              "Icon",
+              style: TextStyle(fontSize: 18),
+            ),
+            SizedBox(
+              height: 64,
+              child: ListView.separated(
+                itemBuilder: (BuildContext context, int index) {
+                  return _buildGlyphItem(index);
+                },
+                separatorBuilder: (BuildContext context, int index) {
+                  return SizedBox(width: 16,);
+                },
+                itemCount: RecipeBookIcon.values.length,
+                scrollDirection: Axis.horizontal,
+              ),
+            ),
+          ],
+        )
+      );
   }
 
   Widget _buildColorItem(int index) {
@@ -177,9 +187,15 @@ class _AddRecipeBookPageState extends State<AddRecipeBookPage> {
   }
 
   void _submitRecipeBook() {
-    // TODO: Validate Inputs
-    // TODO: Create and Add RecipeBook
-    // TODO: Dismiss Page
+    // Validate Input
+    if (_formKey.currentState?.validate() ?? false) {
+
+      // Create RecipeBook
+      RecipeBook recipeBook = RecipeBook(widget._name, widget.color, widget.glyph);
+
+      // Dismiss Page and return recipeBook
+      Navigator.of(context).pop(recipeBook);
+    }
   }
 }
 
