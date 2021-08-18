@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:typed_data';
 import 'package:recipe_manager/models/recipe_detail_model.dart';
 
 class Recipe {
@@ -8,7 +8,7 @@ class Recipe {
   List<Ingredient> ingredients = <Ingredient>[];
   List<PreparationStep> preparationSteps = <PreparationStep>[];
   List<RecipeType> recipeTypes = <RecipeType>[];
-  List<Image> images = <Image>[];
+  List<Uint8List> images = <Uint8List>[];
 
   int preparationTime = 0;
   int cookingTime = 0;
@@ -16,4 +16,3 @@ class Recipe {
   Recipe(this.name);
 
 }
-

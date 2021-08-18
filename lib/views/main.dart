@@ -49,7 +49,6 @@ class MyApp extends StatelessWidget {
 
     Recipe recipe1 = Recipe("Bircher Müsli");
     recipe1.images = [
-      Image.asset("")
     ];
     recipe1.ingredients = [
       Ingredient("Haferflocken", UnitAmount(Unit.GRAM, 150)),
