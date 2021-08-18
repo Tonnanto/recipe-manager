@@ -3,6 +3,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:recipe_manager/models/recipe_book_model.dart';
+import 'package:recipe_manager/models/recipe_model.dart';
+import 'package:recipe_manager/views/edit_recipe_page.dart';
 import 'package:recipe_manager/views/recipe_detail_page.dart';
 
 class RecipeListPage extends StatefulWidget {
@@ -20,6 +22,12 @@ class _RecipeListPageState extends State<RecipeListPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.recipeBook.name),
+      ),
+      floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            _pushAddRecipePage();
+          },
+          child: const Icon(Icons.add)
       ),
       body: _buildBody()
     );
@@ -55,5 +63,19 @@ class _RecipeListPageState extends State<RecipeListPage> {
           return RecipeDetailPage(recipe: _recipe);
         })
     );
+  }
+
+  void _pushAddRecipePage() {
+    Navigator.of(context).push(
+        MaterialPageRoute(builder: (BuildContext context) {
+          return EditRecipePage(recipe: Recipe("New Recipe"));
+        })
+    ).then((editedRecipe) {
+      // New RecipeBook has been created
+      setState(() {
+        if (editedRecipe != null)
+          widget.recipeBook.recipes.add(editedRecipe);
+      });
+    });
   }
 }
