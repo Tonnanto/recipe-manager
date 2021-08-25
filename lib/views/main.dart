@@ -5,10 +5,10 @@ import 'package:recipe_manager/models/recipe_model.dart';
 import 'package:recipe_manager/views/recipe_book_list_page.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(RecipeManagerApp());
 }
 
-class MyApp extends StatelessWidget {
+class RecipeManagerApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
