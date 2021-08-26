@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:enum_to_string/enum_to_string.dart';
-import 'package:recipe_manager/models/recipe_detail_model.dart';
+import 'package:recipe_manager/models/ingredient_model.dart';
 
 
 final String tableRecipes = 'recipes';
@@ -102,4 +102,40 @@ class RecipeFields {
   static final String preparationTime = 'preparationTime';
   static final String cookingTime = 'cookingTime';
   static final String recipeBookID = 'recipeBookID'; // Foreign Key
+}
+
+
+/// A recipe can have multiple types.
+/// Types can be used to filter recipes when searching
+enum RecipeType {
+  MAIN_DISH, DESSERT, APPETIZER, MEAT, VEGETARIAN, VEGAN, COOKING, BAKING, PASTRY, DRINK, OTHER
+}
+
+extension RecipeTypeExtension on RecipeType {
+  String name() {
+    switch (this) {
+      case RecipeType.MAIN_DISH:
+        return 'Main Dish';
+      case RecipeType.DESSERT:
+        return 'Dessert';
+      case RecipeType.APPETIZER:
+        return 'Appetizer';
+      case RecipeType.MEAT:
+        return 'Meat';
+      case RecipeType.VEGETARIAN:
+        return 'Vegetarian';
+      case RecipeType.VEGAN:
+        return 'Vegan';
+      case RecipeType.COOKING:
+        return 'Cooking';
+      case RecipeType.BAKING:
+        return 'Baking';
+      case RecipeType.PASTRY:
+        return 'Pastry';
+      case RecipeType.DRINK:
+        return 'Drink';
+      case RecipeType.OTHER:
+        return 'Other';
+    }
+  }
 }

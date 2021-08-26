@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:recipe_manager/models/recipe_detail_model.dart';
+import 'package:recipe_manager/models/ingredient_model.dart';
 import 'package:recipe_manager/models/recipe_model.dart';
 
 class EditRecipePage extends StatefulWidget {

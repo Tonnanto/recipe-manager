@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:path/path.dart';
 import 'package:recipe_manager/models/recipe_book_model.dart';
-import 'package:recipe_manager/models/recipe_detail_model.dart';
+import 'package:recipe_manager/models/ingredient_model.dart';
 import 'package:recipe_manager/models/recipe_model.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -42,9 +42,8 @@ class PersistenceService {
     print("Creating DB");
     final idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
     final textType = 'TEXT NOT NULL';
-    final boolType = 'BOOLEAN NOT NULL';
     final integerType = 'INTEGER NOT NULL';
-    final recipeBookReferenceType = 'REFERENCES ';
+    final doubleType = 'REAL NOT NULL';
 
     // RecipeBook Table
     String createRecipeBookTable = '''
@@ -75,6 +74,19 @@ class PersistenceService {
     print("Executing: \n$createRecipeTable");
     await db.execute(createRecipeTable);
 
+    // Ingredients Table
+    String createIngredientsTable = '''
+    CREATE TABLE $tableIngredients (
+    ${IngredientFields.id} $idType, 
+    ${IngredientFields.name} $textType,
+    ${IngredientFields.amount} $doubleType, 
+    ${IngredientFields.unit} $textType,
+    ${IngredientFields.recipeID} $integerType,
+    FOREIGN KEY(${IngredientFields.recipeID}) REFERENCES $tableRecipes(${RecipeFields.id})
+    )
+    ''';
+    print("Executing: \n$createIngredientsTable");
+    await db.execute(createIngredientsTable);
   }
 
   /// Closes DB Connection
@@ -189,6 +201,64 @@ class PersistenceService {
 
 
   // ---------------------------------------------------------------------------
+  // CRUD Operations for Ingredients
+  // ---------------------------------------------------------------------------
+
+  Future<Ingredient> createIngredient(Ingredient ingredient) async {
+    print("Adding Ingredient");
+    final db = await instance.database;
+    final id = await db.insert(tableIngredients, ingredient.toMap());
+    return ingredient.copy(id: id);
+  }
+
+  Future<List<Ingredient>> readAllIngredient() async {
+    final db = await instance.database;
+
+    // TODO: Order?
+    // final orderBy = '${NoteFields.time} ASC';
+    final result = await db.query(tableIngredients);
+    print("All Ingredients: \n$result");
+    return result.map((map) => Ingredient.fromMap(map)).toList();
+  }
+
+  Future<List<Ingredient>> readIngredientsFromRecipe(int id) async {
+    final db = await instance.database;
+
+    // TODO: Order?
+    // final orderBy = '${NoteFields.time} ASC';
+    final result = await db.query(
+      tableIngredients,
+      where: '${IngredientFields.recipeID} = ?',
+      whereArgs: [id],
+    );
+
+    print("Ingredients from Recipe: \n$result");
+    return result.map((map) => Ingredient.fromMap(map)).toList();
+  }
+
+  Future<int> updateIngredient(Ingredient ingredient) async {
+    final db = await instance.database;
+
+    return db.update(
+      tableIngredients,
+      ingredient.toMap(),
+      where: '${IngredientFields.id} = ?',
+      whereArgs: [ingredient.id],
+    );
+  }
+
+  Future<int> deleteIngredient(int id) async {
+    final db = await instance.database;
+
+    return await db.delete(
+      tableIngredients,
+      where: '${IngredientFields.id} = ?',
+      whereArgs: [id],
+    );
+  }
+
+
+  // ---------------------------------------------------------------------------
   // DEMO DATA
   // ---------------------------------------------------------------------------
 
@@ -259,33 +329,34 @@ class PersistenceService {
   /// Returns some demo recipes
   Future<List<Recipe>> _getDemoRecipes() async {
     Recipe recipe1 = Recipe(
-        name: "Bircher Müsli",
-        recipeBookID: 1,
-        preparationSteps: [
-          "Haferflocken mit Sahne, Milch, Agaven Sirup und Naturjoghurt mischen und über Nacht zugedeckt ziehen lassen.",
-          "6-Korn-Mischung in den Thermomix geben und 20 Sekunden/Stufe 7 schroten. Mit kaltem Wasser bedeckt im Mixtopf über Nacht ziehen lassen.",
-          "Morgens Mandeln zu den geschroteten Körnern geben und 3 Sekunden/Stufe 6 zerkleinern.",
-          "Apfel und Bananen zugeben und 3 Sekunden/Stufe 5.",
-          "Zum Schluss die Haferflocken-Mischung dazugeben und 15 Sekunden/Linkslauf/Stufe 3 mischen.",
-        ],
-        cookingTime: 360,
-        image:
-        (await rootBundle.load('assets/images/recipes/5acc7083e411a.jpg'))
-            .buffer
-            .asUint8List(),
-        recipeTypes: [RecipeType.VEGETARIAN, RecipeType.DESSERT],
-        preparationTime: 35);
+      id: 1,
+      name: "Bircher Müsli",
+      recipeBookID: 1,
+      preparationSteps: [
+        "Haferflocken mit Sahne, Milch, Agaven Sirup und Naturjoghurt mischen und über Nacht zugedeckt ziehen lassen.",
+        "6-Korn-Mischung in den Thermomix geben und 20 Sekunden/Stufe 7 schroten. Mit kaltem Wasser bedeckt im Mixtopf über Nacht ziehen lassen.",
+        "Morgens Mandeln zu den geschroteten Körnern geben und 3 Sekunden/Stufe 6 zerkleinern.",
+        "Apfel und Bananen zugeben und 3 Sekunden/Stufe 5.",
+        "Zum Schluss die Haferflocken-Mischung dazugeben und 15 Sekunden/Linkslauf/Stufe 3 mischen.",
+      ],
+      cookingTime: 360,
+      image:
+      (await rootBundle.load('assets/images/recipes/5acc7083e411a.jpg'))
+          .buffer
+          .asUint8List(),
+      recipeTypes: [RecipeType.VEGETARIAN, RecipeType.DESSERT],
+      preparationTime: 35);
 
     recipe1.ingredients = [
-      Ingredient("Haferflocken", UnitAmount(Unit.GRAM, 150)),
-      Ingredient("Sahne", UnitAmount(Unit.GRAM, 200)),
-      Ingredient("Milch", UnitAmount(Unit.GRAM, 200)),
-      Ingredient("Agaven Sirup oder Honig", UnitAmount(Unit.GRAM, 60)),
-      Ingredient("Naturjoghurt", UnitAmount(Unit.GRAM, 150)),
-      Ingredient("6-Korn-Mischung", UnitAmount(Unit.GRAM, 80)),
-      Ingredient("Mandeln", UnitAmount(Unit.GRAM, 60)),
-      Ingredient("Apfel", UnitAmount(Unit.PCS, 1)),
-      Ingredient("Banane", UnitAmount(Unit.PCS, 2))
+      Ingredient(name: "Haferflocken", unitAmount: UnitAmount(Unit.GRAM, 150), recipeID: 1),
+      Ingredient(name: "Sahne", unitAmount: UnitAmount(Unit.GRAM, 200), recipeID: 1),
+      Ingredient(name: "Milch", unitAmount: UnitAmount(Unit.GRAM, 200), recipeID: 1),
+      Ingredient(name: "Agaven Sirup oder Honig", unitAmount: UnitAmount(Unit.GRAM, 60), recipeID: 1),
+      Ingredient(name: "Naturjoghurt", unitAmount: UnitAmount(Unit.GRAM, 150), recipeID: 1),
+      Ingredient(name: "6-Korn-Mischung", unitAmount: UnitAmount(Unit.GRAM, 80), recipeID: 1),
+      Ingredient(name: "Mandeln", unitAmount: UnitAmount(Unit.GRAM, 60), recipeID: 1),
+      Ingredient(name: "Apfel", unitAmount: UnitAmount(Unit.PCS, 1), recipeID: 1),
+      Ingredient(name: "Banane", unitAmount: UnitAmount(Unit.PCS, 2), recipeID: 1),
     ];
 
     // Recipe recipe2 = Recipe("Recipe 2");
