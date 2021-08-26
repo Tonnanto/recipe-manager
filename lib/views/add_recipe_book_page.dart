@@ -191,7 +191,7 @@ class _AddRecipeBookPageState extends State<AddRecipeBookPage> {
     if (_formKey.currentState?.validate() ?? false) {
 
       // Create RecipeBook
-      RecipeBook recipeBook = RecipeBook(widget._name, widget.color, widget.glyph);
+      RecipeBook recipeBook = RecipeBook(name: widget._name, color: widget.color, icon: widget.glyph);
 
       // Dismiss Page and return recipeBook
       Navigator.of(context).pop(recipeBook);

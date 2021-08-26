@@ -2,15 +2,16 @@
 
 /// The individual steps that make up a recipe.
 /// RecipeSteps are ordered within a recipe and will be assigned a number when displayed.
-class PreparationStep {
-  String content;
-
-  PreparationStep(this.content);
-}
+// class PreparationStep {
+//   String content;
+//
+//   PreparationStep(this.content);
+// }
 
 
 /// Each Recipe has multiple Ingredients
 class Ingredient {
+  int? id;
   String name;
   UnitAmount unitAmount;
 
@@ -21,7 +22,7 @@ class Ingredient {
 /// A recipe can have multiple types.
 /// Types can be used to filter recipes when searching
 enum RecipeType {
-  MAIN_DISH, DESSERT, APPETIZER, MEAT, VEGETARIAN, VEGAN, COOKING, BAKING, PASTRY, DRINK
+  MAIN_DISH, DESSERT, APPETIZER, MEAT, VEGETARIAN, VEGAN, COOKING, BAKING, PASTRY, DRINK, OTHER
 }
 
 extension RecipeTypeExtension on RecipeType {
@@ -47,6 +48,8 @@ extension RecipeTypeExtension on RecipeType {
         return 'Pastry';
       case RecipeType.DRINK:
         return 'Drink';
+      case RecipeType.OTHER:
+        return 'Other';
     }
   }
 }

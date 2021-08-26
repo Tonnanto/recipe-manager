@@ -6,9 +6,9 @@ import 'package:recipe_manager/models/recipe_detail_model.dart';
 import 'package:recipe_manager/models/recipe_model.dart';
 
 class EditRecipePage extends StatefulWidget {
-  EditRecipePage({required this.recipe});
+  EditRecipePage();
 
-  final Recipe recipe;
+  Recipe? recipe;
   int page = 0;
 
   @override
@@ -27,7 +27,9 @@ class _EditRecipePageState extends State<EditRecipePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-            widget.recipe.name.isNotEmpty ? widget.recipe.name : "New Recipe"),
+          // TODO: Use name from FormBuilder values
+          //   widget.recipe.name.isNotEmpty ? widget.recipe.name :
+            "New Recipe"),
       ),
       body: _buildBody(),
       floatingActionButton: FloatingActionButton.extended(
@@ -100,44 +102,45 @@ class _EditRecipePageState extends State<EditRecipePage> {
                             child: Text(RecipeType.values[index].name()))),
                     spacing: 8,
                   ),
-                  FormBuilderField(
-                    name: 'images',
-                    builder: (FormFieldState<dynamic> field) {
-                      return InputDecorator(
-                        decoration: InputDecoration(labelText: 'Select images'),
-                        child: Container(
-                          height: 100,
-                          child: ListView.separated(
-                            itemBuilder: (context, index) {
-                              return GestureDetector(
-                                onTap: () {
-                                  if (index == widget.recipe.images.length) {
-                                    _getImage();
-                                  } else {
-                                    _removeImage(index);
-                                  }
-                                },
-                                child: Container(
-                                  height: 100,
-                                  width: 100,
-                                  color: Colors.black12,
-                                  child: index == widget.recipe.images.length
-                                      ? Icon(Icons.add)
-                                      : Image.memory(
-                                          widget.recipe.images[index]),
-                                ),
-                              );
-                            },
-                            separatorBuilder: (context, index) => SizedBox(
-                              width: 12,
-                            ),
-                            itemCount: widget.recipe.images.length + 1,
-                            scrollDirection: Axis.horizontal,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
+                  // FormBuilderField(
+                  //   name: 'image',
+                  //   builder: (FormFieldState<dynamic> field) {
+                  //     return InputDecorator(
+                  //       decoration: InputDecoration(labelText: 'Select image'),
+                  //       child: Container(
+                  //         height: 100,
+                  //         child: ListView.separated(
+                  //           itemBuilder: (context, index) {
+                  //             return GestureDetector(
+                  //               onTap: () {
+                  //                 // TODO: Get image data from FormBuilder values
+                  //                 if (widget.recipe.image == null) {
+                  //                   _getImage();
+                  //                 } else {
+                  //                   _removeImage();
+                  //                 }
+                  //               },
+                  //               child: Container(
+                  //                 height: 100,
+                  //                 width: 100,
+                  //                 color: Colors.black12,
+                  //                 child: index == widget.recipe.image.length
+                  //                     ? Icon(Icons.add)
+                  //                     : Image.memory(
+                  //                         widget.recipe.image),
+                  //               ),
+                  //             );
+                  //           },
+                  //           separatorBuilder: (context, index) => SizedBox(
+                  //             width: 12,
+                  //           ),
+                  //           itemCount: 1,
+                  //           scrollDirection: Axis.horizontal,
+                  //         ),
+                  //       ),
+                  //     );
+                  //   },
+                  // ),
                   FormBuilderTextField(
                     name: 'prep_time',
                     decoration: InputDecoration(
@@ -191,15 +194,17 @@ class _EditRecipePageState extends State<EditRecipePage> {
             key: _ingredientsFormKey,
             child: ListView.separated(
               itemBuilder: (context, index) {
-                if (index == widget.recipe.ingredients.length) {
+                // TODO: Access FormBuilder value
+                if (index == (widget.recipe?.ingredients.length ?? 0)) {
                   return Container(
                       height: 50,
                       child: Center(
                         child: ElevatedButton.icon(
                           onPressed: () {
                             setState(() {
-                              widget.recipe.ingredients
-                                  .add(Ingredient('', UnitAmount(Unit.GRAM, 0)));
+                              // TODO: Store values in FormBuilder
+                              // widget.recipe.ingredients
+                              //     .add(Ingredient('', UnitAmount(Unit.GRAM, 0)));
                             });
                           },
                           label: Text('Add Ingredient'),
@@ -220,7 +225,8 @@ class _EditRecipePageState extends State<EditRecipePage> {
                           decoration: InputDecoration(
                             hintText: 'Ingredient',
                           ),
-                          initialValue: widget.recipe.ingredients[index].name,
+                          // TODO: Get initial value from form builder?
+                          // initialValue: widget.recipe.ingredients[index].name,
                         ),
                       ),
                       Flexible(
@@ -231,26 +237,29 @@ class _EditRecipePageState extends State<EditRecipePage> {
                           decoration: InputDecoration(
                             hintText: 'amount',
                           ),
-                          initialValue: widget
-                              .recipe.ingredients[index].unitAmount.amount
-                              .toString(),
-                          onChanged: (value) {
-                            widget.recipe.ingredients[index].unitAmount.amount = _ingredientsFormKey.currentState?.value['amount'];
-                          },
+                          // TODO: Get initial value from form builder?
+                          // initialValue: widget
+                          //     .recipe.ingredients[index].unitAmount.amount
+                          //     .toString(),
+                          // onChanged: (value) {
+                          //   widget.recipe.ingredients[index].unitAmount.amount = _ingredientsFormKey.currentState?.value['amount'];
+                          // },
                         ),
                       ),
                       Flexible(
                         flex: 2,
                         child: FormBuilderDropdown(
-                          name: widget.recipe.ingredients[index].toString() + ' unit',
+                          // TODO: Appropriate names for FormBuilderFields
+                          name: 'unit' + index.toString(),
                           items: List<DropdownMenuItem>.generate(
                               Unit.values.length,
                               (index) => DropdownMenuItem(
                                   value: Unit.values[index],
                                   child: Text(Unit.values[index].shortString()))
                           ),
-                          initialValue:
-                              widget.recipe.ingredients[index].unitAmount.unit,
+                          // TODO: Get initial value from form builder?
+                          // initialValue:
+                          //     widget.recipe.ingredients[index].unitAmount.unit,
                         ),
                       ),
                       Flexible(
@@ -269,7 +278,8 @@ class _EditRecipePageState extends State<EditRecipePage> {
               separatorBuilder: (context, index) => SizedBox(
                 height: 8,
               ),
-              itemCount: widget.recipe.ingredients.length + 1,
+              // TODO: Store Ingredients separate and adjust itemCount
+              itemCount: 1,
               padding: EdgeInsets.only(bottom: 100),
             ),
           ),
@@ -291,91 +301,91 @@ class _EditRecipePageState extends State<EditRecipePage> {
             ),
           ),
         ),
-        Expanded(
-          child: FormBuilder(
-            key: _preparationStepsFormKey,
-            child: ListView.separated(
-              shrinkWrap: true,
-              itemBuilder: (context, index) {
-                if (index == widget.recipe.preparationSteps.length) {
-                  return Container(
-                      height: 50,
-                      child: Center(
-                        child: ElevatedButton.icon(
-                          onPressed: () {
-                            setState(() {
-                              widget.recipe.preparationSteps
-                                  .add(PreparationStep(''));
-                            });
-                          },
-                          label: Text('Add Preparation Step'),
-                          icon: Icon(Icons.add),
-                        ),
-                      ));
-                }
-                return Container(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          width: 32.0,
-                          height: 32.0,
-                          decoration: new BoxDecoration(
-                            color: Theme.of(context).primaryColor,
-                            shape: BoxShape.circle,
-                          ),
-                          child: Center(
-                              child: Text((index + 1).toString())
-                          ),
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Flexible(
-                            flex: 8,
-                            child: ConstrainedBox(
-                              constraints: BoxConstraints(
-                                maxHeight: 300
-                              ),
-                              child: FormBuilderTextField(
-                                name: 'prep_step $index',
-                                decoration: InputDecoration(
-                                  hintText: 'Step ' + (index + 1).toString() + '...',
-                                ),
-                                initialValue: widget.recipe.preparationSteps[index].content,
-                                keyboardType: TextInputType.multiline,
-                                minLines: 1,
-                                maxLines: 36,
-                              ),
-                            ),
-                          ),
-                          Flexible(
-                            child: IconButton(
-                              icon: Icon(Icons.remove_circle),
-                              color: Colors.black26,
-                              onPressed: () {
-                                _removePrepStep(index);
-                              },
-                            ),
-                          )
-                        ],
-                      ),
-                    ],
-                  ),
-                );
-              },
-              separatorBuilder: (context, index) => SizedBox(
-                height: 8,
-              ),
-              itemCount: widget.recipe.preparationSteps.length + 1,
-              padding: EdgeInsets.only(bottom: 100),
-            ),
-          ),
-        ),
+        // Expanded(
+          // child: FormBuilder(
+          //   key: _preparationStepsFormKey,
+          //   child: ListView.separated(
+          //     shrinkWrap: true,
+          //     itemBuilder: (context, index) {
+          //       if (index == widget.recipe.preparationSteps.length) {
+          //         return Container(
+          //             height: 50,
+          //             child: Center(
+          //               child: ElevatedButton.icon(
+          //                 onPressed: () {
+          //                   setState(() {
+          //                     widget.recipe.preparationSteps
+          //                         .add('');
+          //                   });
+          //                 },
+          //                 label: Text('Add Preparation Step'),
+          //                 icon: Icon(Icons.add),
+          //               ),
+          //             ));
+          //       }
+          //       return Container(
+          //         padding: EdgeInsets.symmetric(horizontal: 16),
+          //         child: Column(
+          //           crossAxisAlignment: CrossAxisAlignment.start,
+          //           children: [
+          //             Padding(
+          //               padding: const EdgeInsets.all(8.0),
+          //               child: Container(
+          //                 width: 32.0,
+          //                 height: 32.0,
+          //                 decoration: new BoxDecoration(
+          //                   color: Theme.of(context).primaryColor,
+          //                   shape: BoxShape.circle,
+          //                 ),
+          //                 child: Center(
+          //                     child: Text((index + 1).toString())
+          //                 ),
+          //               ),
+          //             ),
+          //             Row(
+          //               mainAxisAlignment: MainAxisAlignment.start,
+          //               children: [
+          //                 Flexible(
+          //                   flex: 8,
+          //                   child: ConstrainedBox(
+          //                     constraints: BoxConstraints(
+          //                       maxHeight: 300
+          //                     ),
+          //                     child: FormBuilderTextField(
+          //                       name: 'prep_step $index',
+          //                       decoration: InputDecoration(
+          //                         hintText: 'Step ' + (index + 1).toString() + '...',
+          //                       ),
+          //                       initialValue: widget.recipe.preparationSteps[index],
+          //                       keyboardType: TextInputType.multiline,
+          //                       minLines: 1,
+          //                       maxLines: 36,
+          //                     ),
+          //                   ),
+          //                 ),
+          //                 Flexible(
+          //                   child: IconButton(
+          //                     icon: Icon(Icons.remove_circle),
+          //                     color: Colors.black26,
+          //                     onPressed: () {
+          //                       _removePrepStep(index);
+          //                     },
+          //                   ),
+          //                 )
+          //               ],
+          //             ),
+          //           ],
+          //         ),
+          //       );
+          //     },
+          //     separatorBuilder: (context, index) => SizedBox(
+          //       height: 8,
+          //     ),
+          //     itemCount: widget.recipe.preparationSteps.length + 1,
+          //     padding: EdgeInsets.only(bottom: 100),
+          //   ),
+          // ),
+        // ),
       ],
     );
   }
@@ -387,13 +397,14 @@ class _EditRecipePageState extends State<EditRecipePage> {
     if (image != null) {
       var imageData = await image.readAsBytes();
       setState(() {
-        widget.recipe.images.add(imageData);
+        // TODO: Store imageData in FormBuilder value
+        // widget.recipe.image = imageData;
       });
     }
   }
 
-  /// Prompts user to confirm the removal of an image
-  _removeImage(int index) {
+  /// Prompts user to confirm the removal of the image
+  _removeImage() {
     Widget cancelButton = TextButton(
       child: Text("Cancel"),
       onPressed: () {
@@ -405,7 +416,8 @@ class _EditRecipePageState extends State<EditRecipePage> {
       onPressed: () {
         Navigator.of(context).pop();
         setState(() {
-          widget.recipe.images.removeAt(index);
+          // TODO: Remove image from FormBuilder data
+          // widget.recipe.image = null;
         });
       },
     );
@@ -440,7 +452,8 @@ class _EditRecipePageState extends State<EditRecipePage> {
       onPressed: () {
         Navigator.of(context).pop();
         setState(() {
-          widget.recipe.ingredients.removeAt(index);
+          // TODO: Remove ingredient at appropriate place
+          // widget.recipe.ingredients.removeAt(index);
         });
       },
     );
@@ -475,7 +488,8 @@ class _EditRecipePageState extends State<EditRecipePage> {
       onPressed: () {
         Navigator.of(context).pop();
         setState(() {
-          widget.recipe.preparationSteps.removeAt(index);
+          // TODO: Remove Prep Step at appropriate place
+          // widget.recipe.preparationSteps.removeAt(index);
         });
       },
     );

@@ -68,7 +68,7 @@ class _RecipeListPageState extends State<RecipeListPage> {
   void _pushAddRecipePage() {
     Navigator.of(context).push(
         MaterialPageRoute(builder: (BuildContext context) {
-          return EditRecipePage(recipe: Recipe("New Recipe"));
+          return EditRecipePage();
         })
     ).then((editedRecipe) {
       // New RecipeBook has been created

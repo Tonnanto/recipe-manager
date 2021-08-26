@@ -4,18 +4,57 @@ import 'dart:async';
 import 'dart:typed_data';
 import 'dart:ui';
 
+import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/services.dart';
 import 'package:recipe_manager/models/recipe_model.dart';
 import 'package:recipe_manager/utilities/image_utils.dart';
 
-class RecipeBook {
-  String name;
-  late Future<ByteData?> image;
-  List<Recipe> recipes = <Recipe>[];
+final String tableRecipeBooks = 'recipe_books';
 
-  RecipeBook(this.name, RecipeBookColor color, RecipeBookIcon icon) {
-    this.image = createRecipeBookImage(color, icon);
+class RecipeBook {
+  final int? id;
+  final String name;
+
+  final RecipeBookColor color;
+  final RecipeBookIcon icon;
+
+  List<Recipe> recipes = <Recipe>[];
+  late Future<ByteData?> image;
+
+  RecipeBook({
+    this.id,
+    required this.name,
+    required this.color,
+    required this.icon
+  }) {
+    image = createRecipeBookImage(color, icon);
   }
+
+  static RecipeBook fromMap(Map<String, Object?> map) => RecipeBook(
+    id: map[RecipeBookFields.id] as int?,
+    name: map[RecipeBookFields.name] as String,
+    color: EnumToString.fromString(RecipeBookColor.values, map[RecipeBookFields.color] as String) ?? RecipeBookColor.flora,
+    icon: EnumToString.fromString(RecipeBookIcon.values, map[RecipeBookFields.icon] as String) ?? RecipeBookIcon.ingredients,
+  );
+
+  Map<String, Object?> toMap() => {
+    RecipeBookFields.id: id,
+    RecipeBookFields.name: name,
+    RecipeBookFields.color: color,
+    RecipeBookFields.icon: icon,
+  };
+}
+
+class RecipeBookFields {
+  static final List<String> values = [
+    id, name, recipes
+  ];
+
+  static final String id = '_id';
+  static final String name = 'name';
+  static final String recipes = 'recipes';
+  static final String color = 'color';
+  static final String icon = 'icon';
 }
 
 enum RecipeBookColor {
