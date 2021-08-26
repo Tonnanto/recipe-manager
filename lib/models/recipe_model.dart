@@ -21,6 +21,8 @@ class Recipe {
   final int cookingTime;
 
   List<Ingredient> ingredients = <Ingredient>[];
+  static final prepStepSeparator = ' // ';
+  static final recipeTypeSeparator = ' // ';
 
   Recipe({
     this.id,
@@ -35,14 +37,14 @@ class Recipe {
 
   static Recipe fromMap(Map<String, Object?> map) {
 
-    List<String> recipeTypeStrings = (map[RecipeFields.recipeTypes] as String).split(", ");
+    List<String> recipeTypeStrings = (map[RecipeFields.recipeTypes] as String).split(recipeTypeSeparator);
     String imageString = map[RecipeFields.image] as String;
 
     return Recipe(
       id: map[RecipeFields.id] as int?,
       name: map[RecipeFields.name] as String,
       recipeBookID: map[RecipeFields.recipeBookID] as int,
-      preparationSteps: (map[RecipeFields.preparationSteps] as String).split(", "),
+      preparationSteps: (map[RecipeFields.preparationSteps] as String).split(prepStepSeparator),
       recipeTypes: List.generate(recipeTypeStrings.length, (index) => EnumToString.fromString(RecipeType.values, recipeTypeStrings[index]) ?? RecipeType.OTHER),
       image: imageString.isNotEmpty ? Base64Decoder().convert(imageString) : null,
       preparationTime: map[RecipeFields.preparationTime] as int,
@@ -53,13 +55,38 @@ class Recipe {
   Map<String, Object?> toMap() => {
     RecipeFields.id: id,
     RecipeFields.name: name,
-    RecipeFields.preparationSteps: preparationSteps,
-    RecipeFields.recipeTypes: recipeTypes,
+    RecipeFields.preparationSteps: preparationSteps.join(prepStepSeparator),
+    RecipeFields.recipeTypes: (List.generate(recipeTypes.length, (index) => EnumToString.convertToString(recipeTypes[index]))).join(recipeTypeSeparator),
     RecipeFields.image: image != null ? Base64Encoder().convert(image!) : "",
     RecipeFields.preparationTime: preparationTime,
     RecipeFields.cookingTime: cookingTime,
     RecipeFields.recipeBookID: recipeBookID,
   };
+
+  /// Returns a copy of the same Recipe with the given fields changed
+  Recipe copy({
+    int? id,
+    String? name,
+    List<String>? preparationSteps,
+    List<RecipeType>? recipeTypes,
+    Uint8List? image,
+    int? preparationTime,
+    int? cookingTime,
+    int? recipeBookID,
+  }) {
+    Recipe copy = Recipe(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      preparationSteps: preparationSteps ?? this.preparationSteps,
+      recipeTypes: recipeTypes ?? this.recipeTypes,
+      image: image ?? this.image,
+      preparationTime: preparationTime ?? this.preparationTime,
+      cookingTime: cookingTime ?? this.cookingTime,
+      recipeBookID: recipeBookID ?? this.recipeBookID,
+    );
+    copy.ingredients = this.ingredients;
+    return copy;
+  }
 }
 
 class RecipeFields {

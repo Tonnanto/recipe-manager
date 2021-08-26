@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:recipe_manager/models/recipe_book_model.dart';
 import 'package:recipe_manager/models/recipe_model.dart';
+import 'package:recipe_manager/utilities/persistence.dart';
 import 'package:recipe_manager/views/edit_recipe_page.dart';
 import 'package:recipe_manager/views/recipe_detail_page.dart';
 
@@ -17,6 +18,13 @@ class RecipeListPage extends StatefulWidget {
 }
 
 class _RecipeListPageState extends State<RecipeListPage> {
+
+  @override
+  void initState() {
+    _refreshData();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,8 +55,10 @@ class _RecipeListPageState extends State<RecipeListPage> {
   }
 
   Widget _buildRecipeRow(int index) {
+    var image = widget.recipeBook.recipes[index].image;
     return ListTile(
-      leading: Image.network("https://picsum.photos/300"),
+      // TODO: Add Default Recipe Image
+      leading: image != null ? Image.memory(image) : Image.network("https://picsum.photos/300"),
       title: Text(widget.recipeBook.recipes[index].name),
       onTap: () {
         _pushRecipeDetailPage(index);
@@ -76,6 +86,13 @@ class _RecipeListPageState extends State<RecipeListPage> {
         if (editedRecipe != null)
           widget.recipeBook.recipes.add(editedRecipe);
       });
+    });
+  }
+
+  /// Refreshes Data from DB and updates UI
+  void _refreshData() {
+    widget.recipeBook.loadRecipes().then((recipes) {
+      setState(() {});
     });
   }
 }
