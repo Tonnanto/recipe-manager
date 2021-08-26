@@ -3,8 +3,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:recipe_manager/models/recipe_book_model.dart';
-import 'package:recipe_manager/models/recipe_model.dart';
-import 'package:recipe_manager/utilities/persistence.dart';
 import 'package:recipe_manager/views/edit_recipe_page.dart';
 import 'package:recipe_manager/views/recipe_detail_page.dart';
 

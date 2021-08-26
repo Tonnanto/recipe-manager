@@ -1,6 +1,5 @@
 
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:path/path.dart';
 import 'package:recipe_manager/models/recipe_book_model.dart';
 import 'package:recipe_manager/models/ingredient_model.dart';
@@ -295,6 +294,12 @@ class PersistenceService {
     for (Recipe recipe in recipes) {
       await createRecipe(recipe);
     }
+
+    // Ingredients
+    List<Ingredient> ingredients = await _getDemoIngredients();
+    for (Ingredient ingredient in ingredients) {
+      await createIngredient(ingredient);
+    }
   }
 
   /// Returns some demo recipe books
@@ -304,7 +309,6 @@ class PersistenceService {
         name: "Antons Recipes",
         color: RecipeBookColor.banana,
         icon: RecipeBookIcon.cooking_hat);
-    // recipeBook1.recipes.addAll(await _getDemoRecipes());
 
     RecipeBook recipeBook2 = RecipeBook(
         name: "Felix Recipe Book",
@@ -347,18 +351,6 @@ class PersistenceService {
       recipeTypes: [RecipeType.VEGETARIAN, RecipeType.DESSERT],
       preparationTime: 35);
 
-    recipe1.ingredients = [
-      Ingredient(name: "Haferflocken", unitAmount: UnitAmount(Unit.GRAM, 150), recipeID: 1),
-      Ingredient(name: "Sahne", unitAmount: UnitAmount(Unit.GRAM, 200), recipeID: 1),
-      Ingredient(name: "Milch", unitAmount: UnitAmount(Unit.GRAM, 200), recipeID: 1),
-      Ingredient(name: "Agaven Sirup oder Honig", unitAmount: UnitAmount(Unit.GRAM, 60), recipeID: 1),
-      Ingredient(name: "Naturjoghurt", unitAmount: UnitAmount(Unit.GRAM, 150), recipeID: 1),
-      Ingredient(name: "6-Korn-Mischung", unitAmount: UnitAmount(Unit.GRAM, 80), recipeID: 1),
-      Ingredient(name: "Mandeln", unitAmount: UnitAmount(Unit.GRAM, 60), recipeID: 1),
-      Ingredient(name: "Apfel", unitAmount: UnitAmount(Unit.PCS, 1), recipeID: 1),
-      Ingredient(name: "Banane", unitAmount: UnitAmount(Unit.PCS, 2), recipeID: 1),
-    ];
-
     // Recipe recipe2 = Recipe("Recipe 2");
     // Recipe recipe3 = Recipe("Recipe 3");
     // Recipe recipe4 = Recipe("Recipe 4");
@@ -368,6 +360,22 @@ class PersistenceService {
       // recipe2,
       // recipe3,
       // recipe4
+    ];
+  }
+
+  /// Returns some demo ingredients
+  Future<List<Ingredient>> _getDemoIngredients() async {
+    return [
+      // Recipe 1: Bircher Müsli
+      Ingredient(name: "Haferflocken", unitAmount: UnitAmount(Unit.GRAM, 150), recipeID: 1),
+      Ingredient(name: "Sahne", unitAmount: UnitAmount(Unit.GRAM, 200), recipeID: 1),
+      Ingredient(name: "Milch", unitAmount: UnitAmount(Unit.GRAM, 200), recipeID: 1),
+      Ingredient(name: "Agaven Sirup oder Honig", unitAmount: UnitAmount(Unit.GRAM, 60), recipeID: 1),
+      Ingredient(name: "Naturjoghurt", unitAmount: UnitAmount(Unit.GRAM, 150), recipeID: 1),
+      Ingredient(name: "6-Korn-Mischung", unitAmount: UnitAmount(Unit.GRAM, 80), recipeID: 1),
+      Ingredient(name: "Mandeln", unitAmount: UnitAmount(Unit.GRAM, 60), recipeID: 1),
+      Ingredient(name: "Apfel", unitAmount: UnitAmount(Unit.PCS, 1), recipeID: 1),
+      Ingredient(name: "Banane", unitAmount: UnitAmount(Unit.PCS, 2), recipeID: 1),
     ];
   }
 }

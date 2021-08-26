@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:enum_to_string/enum_to_string.dart';
 import 'package:recipe_manager/models/ingredient_model.dart';
+import 'package:recipe_manager/utilities/persistence.dart';
 
 
 final String tableRecipes = 'recipes';
@@ -34,6 +35,14 @@ class Recipe {
     required this.cookingTime,
     required this.recipeBookID
   });
+
+  /// Updates the ingredients field with data from the database
+  Future<List<Ingredient>> loadIngredients() async {
+    if (this.id != null) {
+      this.ingredients = await PersistenceService.instance.readIngredientsFromRecipe(this.id!);
+    }
+    return ingredients;
+  }
 
   static Recipe fromMap(Map<String, Object?> map) {
 

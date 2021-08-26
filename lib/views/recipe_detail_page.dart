@@ -14,6 +14,13 @@ class RecipeDetailPage extends StatefulWidget {
 }
 
 class _RecipeDetailPageState extends State<RecipeDetailPage> {
+
+  @override
+  void initState() {
+    _refreshData();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,7 +34,8 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
   Widget _buildBody() {
     return ListView(
         children: [
-          Image.network("https://picsum.photos/400"),
+          // TODO: Add Default Recipe Image
+          (widget.recipe.image != null) ? Image.memory(widget.recipe.image!) : Image.network("https://picsum.photos/400"),
           Text(
             widget.recipe.name,
             style: TextStyle(fontSize: 32),
@@ -74,5 +82,12 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
         ],
       ),
     );
+  }
+
+  /// Refreshes Data from DB and updates UI
+  void _refreshData() {
+    widget.recipe.loadIngredients().then((_) {
+      setState(() {});
+    });
   }
 }
