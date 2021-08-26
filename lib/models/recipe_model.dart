@@ -4,7 +4,7 @@ import 'package:enum_to_string/enum_to_string.dart';
 import 'package:recipe_manager/models/recipe_detail_model.dart';
 
 
-final String tableRecipeBooks = 'recipes';
+final String tableRecipes = 'recipes';
 
 class Recipe {
 

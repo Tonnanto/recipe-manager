@@ -43,6 +43,23 @@ class RecipeBook {
     RecipeBookFields.color: color,
     RecipeBookFields.icon: icon,
   };
+
+  /// Returns a copy of the same RecipeBook with the given fields changed
+  RecipeBook copy({
+    int? id,
+    String? name,
+    RecipeBookColor? color,
+    RecipeBookIcon? icon,
+  }) {
+    RecipeBook copy = RecipeBook(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      color: color ?? this.color,
+      icon: icon ?? this.icon,
+    );
+    copy.recipes = this.recipes;
+    return copy;
+  }
 }
 
 class RecipeBookFields {
