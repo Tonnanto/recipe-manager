@@ -7,7 +7,7 @@ import 'package:recipe_manager/models/recipe_book_model.dart';
 import 'package:recipe_manager/utilities/persistence.dart';
 import 'package:recipe_manager/views/recipe_list_page.dart';
 
-import 'add_recipe_book_page.dart';
+import 'edit_recipe_book_page.dart';
 
 class RecipeBookListPage extends StatefulWidget {
   RecipeBookListPage({Key? key}) : super(key: key);
@@ -45,7 +45,7 @@ class _RecipeBookListPageState extends State<RecipeBookListPage> {
       body: _buildBody(),
       floatingActionButton: FloatingActionButton(
           onPressed: () {
-            _pushAddRecipeBookPage();
+            _pushEditRecipeBookPage();
           },
           child: const Icon(Icons.add)),
     );
@@ -78,6 +78,9 @@ class _RecipeBookListPageState extends State<RecipeBookListPage> {
       onTap: () {
         _pushRecipeListPage(index);
       },
+      onLongPress: () {
+        _pushEditRecipeBookPage(recipeBook: recipeBooks[index]);
+      },
     );
   }
 
@@ -107,16 +110,13 @@ class _RecipeBookListPageState extends State<RecipeBookListPage> {
     }));
   }
 
-  /// Pushes the page that allows adding a new recipe book
-  void _pushAddRecipeBookPage() {
+  /// Pushes the page that allows adding or editing a recipe book
+  void _pushEditRecipeBookPage({RecipeBook? recipeBook}) {
     Navigator.of(context)
         .push(MaterialPageRoute(builder: (BuildContext context) {
-      return AddRecipeBookPage();
-    })).then((newRecipeBook) {
-      // New RecipeBook has been created
-      setState(() {
-        if (newRecipeBook != null) recipeBooks.add(newRecipeBook);
-      });
+      return EditRecipeBookPage(recipeBook: recipeBook,);
+    })).then((_) {
+      _refreshData();
     });
   }
 
