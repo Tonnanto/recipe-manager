@@ -19,7 +19,7 @@ class Recipe {
   final Uint8List? image;
 
   final int preparationTime;
-  final int cookingTime;
+  final int? cookingTime;
 
   List<Ingredient> ingredients = <Ingredient>[];
   static final prepStepSeparator = ' // ';
@@ -32,7 +32,7 @@ class Recipe {
     required this.recipeTypes,
     required this.image,
     required this.preparationTime,
-    required this.cookingTime,
+    this.cookingTime,
     required this.recipeBookID
   });
 

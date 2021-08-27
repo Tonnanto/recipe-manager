@@ -1,15 +1,23 @@
+import 'dart:typed_data';
+
+import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:recipe_manager/models/ingredient_model.dart';
 import 'package:recipe_manager/models/recipe_model.dart';
+import 'package:recipe_manager/utilities/persistence.dart';
 
 class EditRecipePage extends StatefulWidget {
-  EditRecipePage();
+  final Recipe? recipe;
+  final int recipeBookID;
 
-  Recipe? recipe;
-  int page = 0;
+  const EditRecipePage({
+    Key? key,
+    this.recipe,
+    required this.recipeBookID,
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _EditRecipePageState();
@@ -19,56 +27,98 @@ class _EditRecipePageState extends State<EditRecipePage> {
   final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
   final GlobalKey<FormBuilderState> _ingredientsFormKey = GlobalKey<FormBuilderState>();
   final GlobalKey<FormBuilderState> _preparationStepsFormKey = GlobalKey<FormBuilderState>();
-  PageController _pageController =
-      PageController(initialPage: 0, keepPage: false);
+
+  PageController _pageController = PageController(initialPage: 0, keepPage: false);
+  int page = 0;
+
+  // late String name;
+  // late List<RecipeType> recipeTypes;
+  // late Uint8List? image;
+  // late int preparationTime;
+  // late int cookingTime;
+
+
+  @override
+  void initState() {
+    super.initState();
+
+    // name = widget.recipe?.name ?? '';
+    // recipeTypes = widget.recipe?.recipeTypes ?? [];
+    // image = widget.recipe?.image ?? null;
+    // preparationTime = widget.recipe?.preparationTime ?? 0;
+    // cookingTime = widget.recipe?.cookingTime ?? 0;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          // TODO: Use name from FormBuilder values
-          //   widget.recipe.name.isNotEmpty ? widget.recipe.name :
-            "New Recipe"),
+            widget.recipe == null ? 'New Recipe' : 'Edit Recipe'
+        ),
+        actions: [
+          // Only display delete button if in editing mode
+          widget.recipe != null ?
+          IconButton(
+            onPressed: () {
+              _deleteRecipeAlert();
+            },
+            icon: Icon(Icons.delete),
+            color: Colors.white,
+          ) :
+          Container()
+        ],
       ),
       body: _buildBody(),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          if (widget.page == 2) {
-            _submitRecipe();
+          _formKey.currentState?.save();
+
+          if (page == 2) {
+            addOrUpdateRecipe();
+
           } else {
-            _pageController.animateToPage(widget.page + 1,
+            _pageController.animateToPage(page + 1,
                 curve: Curves.easeInOut, duration: Duration(milliseconds: 350));
           }
         },
-        label: widget.page == 2 ? Text("Save") : Text('Next'),
-        icon: widget.page == 2 ? Icon(Icons.save_alt) : null,
+        label: page == 2 ? Text("Save") : Text('Next'),
+        icon: page == 2 ? Icon(Icons.save_alt) : null,
       ),
     );
   }
 
   Widget _buildBody() {
-    return PageView(
-      controller: _pageController,
-      children: [
-        _buildMetaDataPage(),
-        _buildIngredientsPage(),
-        _buildPreparationStepsPage()
-      ],
-      onPageChanged: (page) {
-        setState(() {
-          widget.page = page;
-        });
+    return FormBuilder(
+      key: _formKey,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      initialValue: {
+        // 'name': name,
+        // 'image': image,
+        // // Initial Value for 'recipe_types' set in FormField
+        // 'prep_time': preparationTime.toString(),
+        // 'cook_time': cookingTime.toString()
+        'name': widget.recipe?.name ?? '',
+        'image': widget.recipe?.image ?? null,
+        // Initial Value for 'recipe_types' set in FormField
+        'prep_time': widget.recipe?.preparationTime.toString() ?? '',
+        'cook_time': widget.recipe?.cookingTime.toString() ?? ''
       },
+      child: PageView(
+        controller: _pageController,
+        children: [
+          _buildMetaDataPage(),
+          _buildIngredientsPage(),
+          _buildPreparationStepsPage()
+        ],
+        onPageChanged: (page) {
+          setState(() {
+            this.page = page;
+          });
+        },
+      ),
+      onChanged: () => _formKey.currentState?.save(),
     );
-  }
-
-  /// Validates input and returns the recipe to the parent view
-  void _submitRecipe() {
-    // TODO validate forms and save new recipe to recipe book
-
-    // Dismiss Page and return recipeBook
-    Navigator.of(context).pop(widget.recipe);
   }
 
   /// First page that allows user to enter meta data for the recipe
@@ -78,98 +128,106 @@ class _EditRecipePageState extends State<EditRecipePage> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            FormBuilder(
-              key: _formKey,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              child: Column(
-                children: [
-                  FormBuilderTextField(
-                    name: 'name',
-                    decoration: InputDecoration(labelText: "Name"),
-                    validator: FormBuilderValidators.compose([
-                      FormBuilderValidators.required(context),
-                    ]),
-                  ),
-                  FormBuilderFilterChip(
-                    name: 'recipe_types',
-                    decoration: InputDecoration(
-                      labelText: 'Select categories',
-                    ),
-                    options: List<FormBuilderFieldOption>.generate(
-                        RecipeType.values.length,
-                        (index) => FormBuilderFieldOption(
-                            value: RecipeType.values[index],
-                            child: Text(RecipeType.values[index].name()))),
-                    spacing: 8,
-                  ),
-                  // FormBuilderField(
-                  //   name: 'image',
-                  //   builder: (FormFieldState<dynamic> field) {
-                  //     return InputDecorator(
-                  //       decoration: InputDecoration(labelText: 'Select image'),
-                  //       child: Container(
-                  //         height: 100,
-                  //         child: ListView.separated(
-                  //           itemBuilder: (context, index) {
-                  //             return GestureDetector(
-                  //               onTap: () {
-                  //                 // TODO: Get image data from FormBuilder values
-                  //                 if (widget.recipe.image == null) {
-                  //                   _getImage();
-                  //                 } else {
-                  //                   _removeImage();
-                  //                 }
-                  //               },
-                  //               child: Container(
-                  //                 height: 100,
-                  //                 width: 100,
-                  //                 color: Colors.black12,
-                  //                 child: index == widget.recipe.image.length
-                  //                     ? Icon(Icons.add)
-                  //                     : Image.memory(
-                  //                         widget.recipe.image),
-                  //               ),
-                  //             );
-                  //           },
-                  //           separatorBuilder: (context, index) => SizedBox(
-                  //             width: 12,
-                  //           ),
-                  //           itemCount: 1,
-                  //           scrollDirection: Axis.horizontal,
-                  //         ),
-                  //       ),
-                  //     );
-                  //   },
-                  // ),
-                  FormBuilderTextField(
-                    name: 'prep_time',
-                    decoration: InputDecoration(
-                      labelText: 'Preparation Time (min)',
-                    ),
-                    valueTransformer: (text) => num.tryParse(text),
-                    validator: FormBuilderValidators.compose([
-                      FormBuilderValidators.required(context),
-                      FormBuilderValidators.numeric(context),
-                    ]),
-                    keyboardType: TextInputType.number,
-                  ),
-                  FormBuilderTextField(
-                    name: 'cook_time',
-                    decoration: InputDecoration(
-                      labelText: 'Cooking Time (min)',
-                    ),
-                    valueTransformer: (text) => num.tryParse(text),
-                    validator: FormBuilderValidators.compose([
-                      FormBuilderValidators.numeric(context),
-                    ]),
-                    keyboardType: TextInputType.number,
-                  ),
-                  SizedBox(
-                    height: 120,
-                  )
-                ],
-              ),
+            FormBuilderTextField(
+              name: 'name',
+              decoration: InputDecoration(labelText: "Name"),
+              validator: FormBuilderValidators.compose([
+                FormBuilderValidators.required(context),
+              ]),
+              // onChanged: (name) => setState(() => this.name = name ?? ''),
+              onChanged: (value) => _formKey.currentState?.fields['name']?.save(),
             ),
+            FormBuilderFilterChip(
+              name: 'recipe_types',
+              initialValue: widget.recipe?.recipeTypes ?? [],
+              decoration: InputDecoration(
+                labelText: 'Select categories',
+              ),
+              options: List<FormBuilderFieldOption>.generate(
+                  RecipeType.values.length,
+                  (index) => FormBuilderFieldOption(
+                      value: RecipeType.values[index],
+                      child: Text(RecipeType.values[index].name()))
+              ),
+              // onChanged: (value) {
+              //   if (value != null) {
+              //     recipeTypes = value.cast<RecipeType>();
+              //   } else {
+              //     recipeTypes = [];
+              //   }
+              // },
+              onChanged: (value) => _formKey.currentState?.fields['recipe_types']?.save(),
+              spacing: 8,
+            ),
+            // FormBuilderField(
+            //   name: 'image',
+            //   builder: (FormFieldState<dynamic> field) {
+            //     return InputDecorator(
+            //       decoration: InputDecoration(labelText: 'Select image'),
+            //       child: Container(
+            //         height: 100,
+            //         child: ListView.separated(
+            //           itemBuilder: (context, index) {
+            //             return GestureDetector(
+            //               onTap: () {
+            //                 // TODO: Get image data from FormBuilder values
+            //                 if (widget.recipe.image == null) {
+            //                   _getImage();
+            //                 } else {
+            //                   _removeImage();
+            //                 }
+            //               },
+            //               child: Container(
+            //                 height: 100,
+            //                 width: 100,
+            //                 color: Colors.black12,
+            //                 child: index == widget.recipe.image.length
+            //                     ? Icon(Icons.add)
+            //                     : Image.memory(
+            //                         widget.recipe.image),
+            //               ),
+            //             );
+            //           },
+            //           separatorBuilder: (context, index) => SizedBox(
+            //             width: 12,
+            //           ),
+            //           itemCount: 1,
+            //           scrollDirection: Axis.horizontal,
+            //         ),
+            //       ),
+            //     );
+            //   },
+            // ),
+            FormBuilderTextField(
+              name: 'prep_time',
+              decoration: InputDecoration(
+                labelText: 'Preparation Time (min)',
+              ),
+              validator: FormBuilderValidators.compose([
+                FormBuilderValidators.required(context),
+                FormBuilderValidators.numeric(context),
+              ]),
+              // onChanged: (value) => setState(() => this.preparationTime = int.tryParse(value ?? '0') ?? 0),
+              onChanged: (value) => _formKey.currentState?.fields['prep_time']?.save(),
+              // valueTransformer: (value) => int.tryParse(value),
+              keyboardType: TextInputType.number,
+            ),
+            FormBuilderTextField(
+              name: 'cook_time',
+              decoration: InputDecoration(
+                labelText: 'Cooking Time (min)',
+              ),
+              validator: FormBuilderValidators.compose([
+                FormBuilderValidators.numeric(context),
+              ]),
+              // onChanged: (value) => setState(() => this.cookingTime = int.tryParse(value ?? '0') ?? 0),
+              onChanged: (value) => _formKey.currentState?.fields['cook_time']?.save(),
+              // valueTransformer: (value) => int.tryParse(value),
+              keyboardType: TextInputType.number,
+            ),
+            SizedBox(
+              height: 120,
+            )
           ],
         ),
       ),
@@ -510,5 +568,86 @@ class _EditRecipePageState extends State<EditRecipePage> {
       },
     );
 
+  }
+
+  /// validates form and adds or updates the recipe in the database
+  void addOrUpdateRecipe() async {
+    final isValid = _formKey.currentState?.validate() ?? false;
+
+    if (isValid) {
+      final isUpdating = widget.recipe != null;
+
+      if (isUpdating) {
+        await updateRecipe();
+      } else {
+        await addRecipe();
+      }
+
+      Navigator.of(context).pop();
+    }
+  }
+
+  Future updateRecipe() async {
+    final recipe = widget.recipe!.copy(
+      name: _formKey.currentState!.value['name'],
+      recipeTypes: (_formKey.currentState!.value['recipe_types'] as List<dynamic>).cast<RecipeType>(),
+      image: _formKey.currentState!.value['image'], // TODO: Cast?
+      preparationTime: int.tryParse(_formKey.currentState!.value['prep_time']),
+      cookingTime: int.tryParse(_formKey.currentState!.value['cook_time']),
+      // TODO: Ingredients & Prep Steps
+    );
+
+    await PersistenceService.instance.updateRecipe(recipe);
+  }
+
+  Future addRecipe() async {
+    final recipe = Recipe(
+      name: _formKey.currentState!.value['name'],
+      recipeBookID: widget.recipeBookID,
+      recipeTypes: (_formKey.currentState!.value['recipe_types'] as List<dynamic>).cast<RecipeType>(),
+      image: _formKey.currentState!.value['image'], // TODO: Cast?
+      preparationTime: int.tryParse(_formKey.currentState!.value['prep_time']) ?? 0,
+      cookingTime: int.tryParse(_formKey.currentState!.value['cook_time']),
+      preparationSteps: [], // TODO: Ingredients & Prep Steps
+
+    );
+
+    await PersistenceService.instance.createRecipe(recipe);
+  }
+
+  void _deleteRecipeAlert() {
+    Widget cancelButton = Center(
+        child: OutlinedButton(
+          child: Text("Cancel"),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ));
+    Widget deleteButton = Center(
+        child: TextButton(
+          child: Text("Delete"),
+          onPressed: () {
+            PersistenceService.instance.deleteRecipe(widget.recipe?.id ?? 0).then((_) {
+              Navigator.of(context).pop();
+              Navigator.of(context).pop();
+              Navigator.of(context).pop();
+            });
+          },
+        )
+    );
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Delete Recipe?"),
+      content:
+      Text("Do you really want to delete this recipe?"),
+      actions: [deleteButton, cancelButton],
+    );
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 }

@@ -3,6 +3,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:recipe_manager/models/recipe_book_model.dart';
+import 'package:recipe_manager/models/recipe_model.dart';
 import 'package:recipe_manager/views/edit_recipe_page.dart';
 import 'package:recipe_manager/views/recipe_detail_page.dart';
 
@@ -68,22 +69,18 @@ class _RecipeListPageState extends State<RecipeListPage> {
     Navigator.of(context).push(
         MaterialPageRoute(builder: (BuildContext context) {
           final _recipe = widget.recipeBook.recipes[index];
-          return RecipeDetailPage(recipe: _recipe);
+          return RecipeDetailPage(recipeId: _recipe.id!);
         })
-    );
+    ).then((value) => _refreshData());
   }
 
-  void _pushAddRecipePage() {
-    Navigator.of(context).push(
-        MaterialPageRoute(builder: (BuildContext context) {
-          return EditRecipePage();
-        })
-    ).then((editedRecipe) {
-      // New RecipeBook has been created
-      setState(() {
-        if (editedRecipe != null)
-          widget.recipeBook.recipes.add(editedRecipe);
-      });
+  /// Pushes the page that allows adding a recipe
+  void _pushAddRecipePage({Recipe? recipe}) {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (BuildContext context) {
+      return EditRecipePage(recipe: recipe, recipeBookID: widget.recipeBook.id!,);
+    })).then((_) {
+      _refreshData();
     });
   }
 

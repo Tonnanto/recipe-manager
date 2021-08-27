@@ -68,6 +68,7 @@ class PersistenceService {
     ${RecipeFields.cookingTime} $integerType, 
     ${RecipeFields.recipeBookID} $integerType,
     FOREIGN KEY(${RecipeFields.recipeBookID}) REFERENCES $tableRecipeBooks(${RecipeBookFields.id})
+    ON DELETE CASCADE
     )
     ''';
     print("Executing: \n$createRecipeTable");
@@ -82,6 +83,7 @@ class PersistenceService {
     ${IngredientFields.unit} $textType,
     ${IngredientFields.recipeID} $integerType,
     FOREIGN KEY(${IngredientFields.recipeID}) REFERENCES $tableRecipes(${RecipeFields.id})
+    ON DELETE CASCADE
     )
     ''';
     print("Executing: \n$createIngredientsTable");
@@ -131,7 +133,6 @@ class PersistenceService {
   Future<int> deleteRecipeBook(int id) async {
     final db = await instance.database;
 
-    // TODO: Deletion Rule? Cascade?
     return await db.delete(
       tableRecipeBooks,
       where: '${RecipeBookFields.id} = ?',
@@ -161,7 +162,7 @@ class PersistenceService {
     return result.map((map) => Recipe.fromMap(map)).toList();
   }
 
-  Future<List<Recipe>> readRecipesFromBook(int id) async {
+  Future<List<Recipe>> readRecipesFromBook(int recipeBookID) async {
     final db = await instance.database;
 
     // TODO: Order?
@@ -169,11 +170,24 @@ class PersistenceService {
     final result = await db.query(
       tableRecipes,
       where: '${RecipeFields.recipeBookID} = ?',
-      whereArgs: [id],
+      whereArgs: [recipeBookID],
     );
 
     print("Recipes from Book: \n$result");
     return result.map((map) => Recipe.fromMap(map)).toList();
+  }
+
+  Future<Recipe> readRecipe(int recipeId) async {
+    final db = await instance.database;
+
+    final result = await db.query(
+      tableRecipes,
+      where: '${RecipeFields.id} = ?',
+      whereArgs: [recipeId],
+    );
+
+    print("Recipe with ID $recipeId: \n$result");
+    return Recipe.fromMap(result.first);
   }
 
   Future<int> updateRecipe(Recipe recipe) async {
@@ -190,7 +204,6 @@ class PersistenceService {
   Future<int> deleteRecipe(int id) async {
     final db = await instance.database;
 
-    // TODO: Deletion Rule? Cascade?
     return await db.delete(
       tableRecipes,
       where: '${RecipeFields.id} = ?',
