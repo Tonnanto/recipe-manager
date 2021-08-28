@@ -17,6 +17,13 @@ class RecipeListPage extends StatefulWidget {
 }
 
 class _RecipeListPageState extends State<RecipeListPage> {
+
+  @override
+  void initState() {
+    _refreshData();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,8 +54,10 @@ class _RecipeListPageState extends State<RecipeListPage> {
   }
 
   Widget _buildRecipeRow(int index) {
+    var image = widget.recipeBook.recipes[index].image;
     return ListTile(
-      leading: Image.network("https://picsum.photos/300"),
+      // TODO: Add Default Recipe Image
+      leading: image != null ? Image.memory(image) : Image.network("https://picsum.photos/300"),
       title: Text(widget.recipeBook.recipes[index].name),
       onTap: () {
         _pushRecipeDetailPage(index);
@@ -60,22 +69,25 @@ class _RecipeListPageState extends State<RecipeListPage> {
     Navigator.of(context).push(
         MaterialPageRoute(builder: (BuildContext context) {
           final _recipe = widget.recipeBook.recipes[index];
-          return RecipeDetailPage(recipe: _recipe);
+          return RecipeDetailPage(recipeId: _recipe.id!);
         })
-    );
+    ).then((value) => _refreshData());
   }
 
-  void _pushAddRecipePage() {
-    Navigator.of(context).push(
-        MaterialPageRoute(builder: (BuildContext context) {
-          return EditRecipePage(recipe: Recipe("New Recipe"));
-        })
-    ).then((editedRecipe) {
-      // New RecipeBook has been created
-      setState(() {
-        if (editedRecipe != null)
-          widget.recipeBook.recipes.add(editedRecipe);
-      });
+  /// Pushes the page that allows adding a recipe
+  void _pushAddRecipePage({Recipe? recipe}) {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (BuildContext context) {
+      return EditRecipePage(recipe: recipe, recipeBookID: widget.recipeBook.id!,);
+    })).then((_) {
+      _refreshData();
+    });
+  }
+
+  /// Refreshes Data from DB and updates UI
+  void _refreshData() {
+    widget.recipeBook.loadRecipes().then((recipes) {
+      setState(() {});
     });
   }
 }
