@@ -5,13 +5,13 @@ final String tableIngredients = 'ingredients';
 
 /// Each Recipe has multiple Ingredients
 class Ingredient {
-  final int? id;
-  final String name;
-  final UnitAmount unitAmount;
+  late final int? id;
+  late String name;
+  late final UnitAmount unitAmount;
 
   final int recipeID;
 
-  const Ingredient({
+  Ingredient({
     this.id,
     required this.name,
     required this.unitAmount,
@@ -49,6 +49,10 @@ class Ingredient {
       recipeID: recipeID ?? this.recipeID,
     );
     return copy;
+  }
+
+  bool get isValid {
+    return name.isNotEmpty && unitAmount.amount > 0;
   }
 }
 

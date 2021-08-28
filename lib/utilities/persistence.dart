@@ -381,8 +381,8 @@ class PersistenceService {
     return [
       // Recipe 1: Bircher Müsli
       Ingredient(name: "Haferflocken", unitAmount: UnitAmount(Unit.GRAM, 150), recipeID: 1),
-      Ingredient(name: "Sahne", unitAmount: UnitAmount(Unit.GRAM, 200), recipeID: 1),
-      Ingredient(name: "Milch", unitAmount: UnitAmount(Unit.GRAM, 200), recipeID: 1),
+      Ingredient(name: "Sahne", unitAmount: UnitAmount(Unit.MILLI_LITRE, 200), recipeID: 1),
+      Ingredient(name: "Milch", unitAmount: UnitAmount(Unit.MILLI_LITRE, 200), recipeID: 1),
       Ingredient(name: "Agaven Sirup oder Honig", unitAmount: UnitAmount(Unit.GRAM, 60), recipeID: 1),
       Ingredient(name: "Naturjoghurt", unitAmount: UnitAmount(Unit.GRAM, 150), recipeID: 1),
       Ingredient(name: "6-Korn-Mischung", unitAmount: UnitAmount(Unit.GRAM, 80), recipeID: 1),

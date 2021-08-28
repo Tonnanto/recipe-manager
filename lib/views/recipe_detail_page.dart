@@ -17,7 +17,7 @@ class RecipeDetailPage extends StatefulWidget {
 
 class _RecipeDetailPageState extends State<RecipeDetailPage> {
 
-  late Recipe recipe;
+  Recipe? recipe;
   bool isLoading = false;
 
   @override
@@ -31,7 +31,7 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
     setState(() => isLoading = true);
 
     this.recipe = await PersistenceService.instance.readRecipe(widget.recipeId);
-    await this.recipe.loadIngredients();
+    await this.recipe?.loadIngredients();
 
     setState(() => isLoading = false);
   }
@@ -41,13 +41,15 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(recipe.name),
+          title: Text(recipe?.name ?? ''),
           actions: [
             IconButton(
               icon: Icon(Icons.edit),
               color: Colors.white,
               onPressed: () {
-                _pushEditRecipePage(recipe);
+                if (recipe != null) {
+                  _pushEditRecipePage(recipe!);
+                }
               },
             )
           ],
@@ -62,9 +64,9 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
     return ListView(
         children: [
           // TODO: Add Default Recipe Image
-          (recipe.image != null) ? Image.memory(recipe.image!) : Image.network("https://picsum.photos/400"),
+          (recipe!.image != null) ? Image.memory(recipe!.image!) : Image.network("https://picsum.photos/400"),
           Text(
-            recipe.name,
+            recipe!.name,
             style: TextStyle(fontSize: 32),
           ),
           _buildIngredientList()
@@ -91,7 +93,7 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
             separatorBuilder: (BuildContext context, int index) {
               return Divider();
             },
-            itemCount: recipe.ingredients.length,
+            itemCount: recipe!.ingredients.length,
           )
         )
       ]
@@ -104,8 +106,8 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(recipe.ingredients[index].name),
-          Text(recipe.ingredients[index].unitAmount.toString()),
+          Text(recipe!.ingredients[index].name),
+          Text(recipe!.ingredients[index].unitAmount.toString()),
         ],
       ),
     );

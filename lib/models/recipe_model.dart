@@ -16,10 +16,10 @@ class Recipe {
 
   final List<String> preparationSteps;
   final List<RecipeType> recipeTypes;
-  final Uint8List? image;
+  Uint8List? image;
 
   final int preparationTime;
-  final int? cookingTime;
+  final int cookingTime;
 
   List<Ingredient> ingredients = <Ingredient>[];
   static final prepStepSeparator = ' // ';
@@ -32,7 +32,7 @@ class Recipe {
     required this.recipeTypes,
     required this.image,
     required this.preparationTime,
-    this.cookingTime,
+    required this.cookingTime,
     required this.recipeBookID
   });
 
@@ -42,6 +42,32 @@ class Recipe {
       this.ingredients = await PersistenceService.instance.readIngredientsFromRecipe(this.id!);
     }
     return ingredients;
+  }
+
+  /// Updates the database with new ingredients for this recipe
+  Future<Iterable<Ingredient>> updateIngredients(Iterable<Ingredient> newIngredients) async {
+    Iterable<int> oldIngredientIds = (await loadIngredients()).map((e) => e.id!);
+
+    // Update and add new ingredients
+    for (Ingredient ingredient in newIngredients) {
+      if (ingredient.id != null && oldIngredientIds.contains(ingredient.id!)) {
+        // If id is known -> update ingredient in db
+        await PersistenceService.instance.updateIngredient(ingredient.copy(recipeID: this.id));
+
+      } else {
+        // If id is unknown or no id created yet -> add ingredient to db
+        await PersistenceService.instance.createIngredient(ingredient.copy(recipeID: this.id));
+      }
+    }
+
+    // Delete old ingredients that are not in newIngredients
+    for (int oldIngredientId in oldIngredientIds) {
+      if (!newIngredients.map((e) => e.id).contains(oldIngredientId)) {
+        PersistenceService.instance.deleteIngredient(oldIngredientId);
+      }
+    }
+
+    return newIngredients;
   }
 
   static Recipe fromMap(Map<String, Object?> map) {
@@ -146,5 +172,20 @@ extension RecipeTypeExtension on RecipeType {
       case RecipeType.OTHER:
         return 'Other';
     }
+  }
+}
+
+/// This class is only used so a ObjectKey can be used on Preparation Steps.
+/// A recipe stores preparation steps as List<String>
+class PreparationStep {
+  String content = '';
+  PreparationStep({required this.content});
+
+  static List<PreparationStep> fromStrings(List<String> strings) {
+    return List.generate(strings.length, (index) => PreparationStep(content: strings[index]));
+  }
+
+  static List<String> toStrings(List<PreparationStep> prepSteps) {
+    return List.generate(prepSteps.length, (index) => prepSteps[index].content);
   }
 }
