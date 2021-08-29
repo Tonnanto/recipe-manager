@@ -32,41 +32,74 @@ class _EditRecipePageState extends State<EditRecipePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-            widget.recipe == null ? 'New Recipe' : 'Edit Recipe'
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+              widget.recipe == null ? 'New Recipe' : 'Edit Recipe'
+          ),
+          actions: [
+            // Only display delete button if in editing mode
+            widget.recipe != null ?
+            IconButton(
+              onPressed: () {
+                _deleteRecipeAlert();
+              },
+              icon: Icon(Icons.delete),
+              color: Colors.white,
+            ) :
+            Container()
+          ],
         ),
-        actions: [
-          // Only display delete button if in editing mode
-          widget.recipe != null ?
-          IconButton(
-            onPressed: () {
-              _deleteRecipeAlert();
-            },
-            icon: Icon(Icons.delete),
-            color: Colors.white,
-          ) :
-          Container()
+        body: _buildBody(),
+        floatingActionButton: _buildActionButton()
+      ),
+    );
+  }
+
+  /// Implements custom behaviour on pop (Back Button)
+  Future<bool> _onWillPop() async {
+    if (page > 0) {
+      _pageController.animateToPage(page - 1,
+          curve: Curves.easeInOut, duration: Duration(milliseconds: 350));
+      return false;
+    }
+    return (await showDialog(
+      context: context,
+      builder: (context) => new AlertDialog(
+        title: new Text('Are you sure?'),
+        content: new Text('This will revert all the edits you made.'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: new Text('No'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: new Text('Yes'),
+          ),
         ],
       ),
-      body: _buildBody(),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          _formKey.currentState?.save();
-          FocusScope.of(context).unfocus();
+    )) ?? false;
+  }
 
-          if (page == 2) {
-            addOrUpdateRecipe();
+  /// Action button that changes appearance and behaviour depending on the current page
+  Widget _buildActionButton() {
+    return FloatingActionButton.extended(
+      onPressed: () {
+        _formKey.currentState?.save();
+        FocusScope.of(context).unfocus();
 
-          } else {
-            _pageController.animateToPage(page + 1,
-                curve: Curves.easeInOut, duration: Duration(milliseconds: 350));
-          }
-        },
-        label: page == 2 ? Text("Save") : Text('Next'),
-        icon: page == 2 ? Icon(Icons.save_alt) : null,
-      ),
+        if (page == 2) {
+          addOrUpdateRecipe();
+        } else {
+          _pageController.animateToPage(page + 1,
+              curve: Curves.easeInOut, duration: Duration(milliseconds: 350));
+        }
+      },
+      label: page == 2 ? Text("Save") : Text('Next'),
+      icon: page == 2 ? Icon(Icons.save_alt) : null,
     );
   }
 
@@ -611,13 +644,14 @@ class _EditRecipePageState extends State<EditRecipePage> {
     }
   }
 
+  /// Updates an existing recipe in the database
   Future updateRecipe() async {
     final recipe = widget.recipe!.copy(
       name: _formKey.currentState!.value['name'],
       recipeTypes: (_formKey.currentState!.value['recipe_types'] as List<dynamic>).cast<RecipeType>(),
       preparationTime: int.tryParse(_formKey.currentState!.value['prep_time']),
       cookingTime: int.tryParse(_formKey.currentState!.value['cook_time']),
-      preparationSteps: PreparationStep.toStrings((_formKey.currentState!.value['prep_steps'] as List<dynamic>).cast<PreparationStep>()),
+      preparationSteps: PreparationStep.toStrings((_formKey.currentState!.value['prep_steps'] as List<dynamic>).cast<PreparationStep>().where((p) => p.content.isNotEmpty).toList()),
     );
     // setting image separate from copy method. because removing the existing image (setting image to null) in copy method will not work.
     recipe.image = _formKey.currentState!.value['image'];
@@ -627,6 +661,7 @@ class _EditRecipePageState extends State<EditRecipePage> {
     await recipe.updateIngredients(ingredients);
   }
 
+  /// Adds a new recipe to the database
   Future addRecipe() async {
     final recipe = Recipe(
       name: _formKey.currentState!.value['name'],
@@ -635,7 +670,7 @@ class _EditRecipePageState extends State<EditRecipePage> {
       image: _formKey.currentState!.value['image'],
       preparationTime: int.tryParse(_formKey.currentState!.value['prep_time']) ?? 0,
       cookingTime: int.tryParse(_formKey.currentState!.value['cook_time']) ?? 0,
-      preparationSteps: PreparationStep.toStrings((_formKey.currentState!.value['prep_steps'] as List<dynamic>).cast<PreparationStep>()),
+      preparationSteps: PreparationStep.toStrings((_formKey.currentState!.value['prep_steps'] as List<dynamic>).cast<PreparationStep>().where((p) => p.content.isNotEmpty).toList()),
     );
 
     List<Ingredient> ingredients = (_formKey.currentState!.value['ingredients'] as List<dynamic>).cast<Ingredient>();
@@ -643,24 +678,38 @@ class _EditRecipePageState extends State<EditRecipePage> {
     await newRecipe.updateIngredients(ingredients);
   }
 
+  /// Displays an alert and deletes a recipe from the database after user confirmation
   void _deleteRecipeAlert() {
     Widget cancelButton = Center(
-        child: OutlinedButton(
-          child: Text("Cancel"),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
+        child: Container(
+          width: 220,
+          child: OutlinedButton(
+            child: Text(
+              "Cancel",
+              style: TextStyle(color: Colors.black),
+            ),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
         ));
     Widget deleteButton = Center(
-        child: TextButton(
-          child: Text("Delete"),
-          onPressed: () {
-            PersistenceService.instance.deleteRecipe(widget.recipe?.id ?? 0).then((_) {
-              Navigator.of(context).pop();
-              Navigator.of(context).pop();
-              Navigator.of(context).pop();
-            });
-          },
+        child: Container(
+          width: 220,
+          child: ElevatedButton.icon(
+            style: ElevatedButton.styleFrom(
+                primary: Colors.red
+            ),
+            icon: Icon(Icons.delete_outline),
+            label: Text("Delete"),
+            onPressed: () {
+              PersistenceService.instance.deleteRecipe(widget.recipe?.id ?? 0).then((_) {
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+              });
+            },
+          ),
         )
     );
     // set up the AlertDialog

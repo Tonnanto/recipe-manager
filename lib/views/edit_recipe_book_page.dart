@@ -25,7 +25,7 @@ class _EditRecipeBookPageState extends State<EditRecipeBookPage> {
   late RecipeBookColor color;
   late RecipeBookIcon glyph;
 
-  ByteData? image;
+  Uint8List? image;
 
   @override
   void initState() {
@@ -78,10 +78,10 @@ class _EditRecipeBookPageState extends State<EditRecipeBookPage> {
             if (snapshot.connectionState == ConnectionState.done &&
                 snapshot.hasData &&
                 snapshot.data != null) {
-              image = snapshot.data!;
-              return Image.memory(Uint8List.view(snapshot.data!.buffer));
+              image = Uint8List.view(snapshot.data!.buffer);
+              return Image.memory(image!);
             } else if (image != null) {
-              return Image.memory(Uint8List.view(image!.buffer));
+              return Image.memory(image!);
             } else {
               return SizedBox(
                 height: 200,
@@ -93,7 +93,7 @@ class _EditRecipeBookPageState extends State<EditRecipeBookPage> {
       ),
       Container(
         height: 64,
-        margin: EdgeInsets.all(8),
+        margin: EdgeInsets.all(16),
         child: Form(
           key: _formKey,
           child: TextFormField(
@@ -124,18 +124,22 @@ class _EditRecipeBookPageState extends State<EditRecipeBookPage> {
   Container _buildColorPicker() {
     return Container(
       height: 100,
-      margin: EdgeInsets.all(8),
+      margin: const EdgeInsets.symmetric(vertical: 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Text(
-            "Color",
-            style: TextStyle(fontSize: 18),
+          Padding(
+            padding: const EdgeInsets.only(left: 16),
+            child: Text(
+              "Color",
+              style: TextStyle(fontSize: 18),
+            ),
           ),
           SizedBox(
             height: 64,
             child: ListView.separated(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               itemBuilder: (BuildContext context, int index) {
                 return _buildColorItem(index);
               },
@@ -156,18 +160,22 @@ class _EditRecipeBookPageState extends State<EditRecipeBookPage> {
   Container _buildGlyphPicker() {
     return Container(
         height: 100,
-        margin: EdgeInsets.all(8),
+        margin: const EdgeInsets.symmetric(vertical: 8),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Text(
-              "Icon",
-              style: TextStyle(fontSize: 18),
+            Padding(
+              padding: const EdgeInsets.only(left: 16),
+              child: Text(
+                "Icon",
+                style: TextStyle(fontSize: 18),
+              ),
             ),
             SizedBox(
               height: 64,
               child: ListView.separated(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 itemBuilder: (BuildContext context, int index) {
                   return _buildGlyphItem(index);
                 },
@@ -256,23 +264,33 @@ class _EditRecipeBookPageState extends State<EditRecipeBookPage> {
 
   void _deleteRecipeBookAlert() {
     Widget cancelButton = Center(
-        child: OutlinedButton(
-          child: Text("Cancel"),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
+        child: Container(
+          width: 220,
+          child: OutlinedButton(
+            child: Text(
+              "Cancel",
+              style: TextStyle(color: Colors.black),
+            ),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
         ));
     Widget deleteButton = Center(
-        child: TextButton(
-          child: Text("Delete"),
-          onPressed: () {
-            PersistenceService.instance.deleteRecipeBook(widget.recipeBook?.id ?? 0).then((_) {
-              Navigator.of(context).pop();
-              Navigator.of(context).pop();
-            });
-          },
-        )
-    );
+        child: Container(
+          width: 220,
+          child: ElevatedButton.icon(
+            style: ElevatedButton.styleFrom(primary: Colors.red),
+            icon: Icon(Icons.delete_outline),
+            label: Text("Delete"),
+            onPressed: () {
+              PersistenceService.instance.deleteRecipeBook(widget.recipeBook?.id ?? 0).then((_) {
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+              });
+            },
+          ),
+        ));
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       title: Text("Delete Recipe Book?"),

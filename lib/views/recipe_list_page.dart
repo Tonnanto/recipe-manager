@@ -59,8 +59,15 @@ class _RecipeListPageState extends State<RecipeListPage> {
       leading: AspectRatio(
         aspectRatio: 1.0,
         child: FittedBox(
-          // TODO: Add Default Recipe Image
-          child: image != null ? Image.memory(image) : Image.network("https://picsum.photos/300"),
+          child: Container(
+            color: Colors.black12,
+            child: image != null
+                ? Image.memory(image)
+                : Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Icon(Icons.restaurant, color: Colors.black38,),
+                ),
+          ),
           fit: BoxFit.cover,
           clipBehavior: Clip.hardEdge,
         ),

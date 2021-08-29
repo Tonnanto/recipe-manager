@@ -45,7 +45,7 @@ class _RecipeBookListPageState extends State<RecipeBookListPage> {
             onPressed: () {
               _resetDataAlert();
             },
-            icon: Icon(Icons.delete_outlined),
+            icon: Icon(Icons.settings_backup_restore),
             color: Colors.white,
           )
         ],
@@ -122,46 +122,64 @@ class _RecipeBookListPageState extends State<RecipeBookListPage> {
   void _pushEditRecipeBookPage({RecipeBook? recipeBook}) {
     Navigator.of(context)
         .push(MaterialPageRoute(builder: (BuildContext context) {
-      return EditRecipeBookPage(recipeBook: recipeBook,);
+      return EditRecipeBookPage(
+        recipeBook: recipeBook,
+      );
     })).then((_) {
       _refreshRecipeBooks();
     });
   }
 
+  /// Displays an Alert that allows the user to reset the demo data or to delete all data
   void _resetDataAlert() {
     Widget cancelButton = Center(
-        child: OutlinedButton(
-      child: Text("Cancel"),
-      onPressed: () {
-        Navigator.of(context).pop();
-      },
+        child: Container(
+      width: 220,
+      child: OutlinedButton(
+        child: Text(
+          "Cancel",
+          style: TextStyle(color: Colors.black),
+        ),
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+      ),
     ));
     Widget resetDemoDataButton = Center(
-      child: TextButton(
-        child: Text("Reset Demo Recipes"),
+        child: Container(
+      width: 220,
+      child: ElevatedButton.icon(
+        style: ElevatedButton.styleFrom(primary: Colors.red),
+        icon: Icon(Icons.restore),
+        label: Text("Reset Demo Recipes"),
         onPressed: () {
           PersistenceService.instance.resetDemoData().then((_) {
             _refreshRecipeBooks();
             Navigator.of(context).pop();
           });
         },
-      )
-    );
+      ),
+    ));
     Widget deleteDataButton = Center(
-        child: TextButton(
-      child: Text("Delete all Data"),
-      onPressed: () {
-        PersistenceService.instance.deleteAllData().then((_) {
-          _refreshRecipeBooks();
-          Navigator.of(context).pop();
-        });
-      },
+        child: Container(
+      width: 220,
+      child: ElevatedButton.icon(
+        style: ElevatedButton.styleFrom(primary: Colors.red),
+        icon: Icon(Icons.delete_outline),
+        label: Text("Delete all Data"),
+        onPressed: () {
+          PersistenceService.instance.deleteAllData().then((_) {
+            _refreshRecipeBooks();
+            Navigator.of(context).pop();
+          });
+        },
+      ),
     ));
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       title: Text("Reset Data"),
-      content:
-          Text("Do you want to reset the demo recipes or delete all data?\nAll your recipes will be deleted!"),
+      content: Text(
+          "Do you want to reset the demo recipes or delete all data?\nAll your recipes will be deleted!"),
       actions: [resetDemoDataButton, deleteDataButton, cancelButton],
     );
     // show the dialog

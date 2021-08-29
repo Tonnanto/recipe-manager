@@ -58,17 +58,15 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
   Widget _buildBody() {
     return ListView(
       children: [
-        AspectRatio(
-          aspectRatio: 1.0,
-          child: FittedBox(
-            // TODO: Add Default Recipe Image
-            child: (recipe!.image != null)
-                ? Image.memory(recipe!.image!)
-                : Image.network("https://picsum.photos/400"),
-            fit: BoxFit.cover,
-            clipBehavior: Clip.hardEdge,
+        if (recipe!.image != null)
+          AspectRatio(
+            aspectRatio: 1.0,
+            child: FittedBox(
+              child: Image.memory(recipe!.image!),
+              fit: BoxFit.cover,
+              clipBehavior: Clip.hardEdge,
+            ),
           ),
-        ),
         Padding(
           padding: const EdgeInsets.all(16.0),
           child: Text(
@@ -88,17 +86,19 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
 
   Widget _buildMetaDataList() {
     return Padding(
-      padding: EdgeInsets.all(16.0),
+      padding: EdgeInsets.all(8.0),
       child: Column(
         children: [
           Wrap(
             alignment: WrapAlignment.center,
             spacing: 12.0,
             children: [
-              Text('Preparation Time: ' + (recipe?.preparationTime.toString() ?? '') + ' min'),
-              Text('Cooking Time: ' + (recipe?.cookingTime.toString() ?? '') + ' min'),
+              _buildTimeChip('Prep Time', (recipe?.preparationTime.toString() ?? '') + ' min'),
+              if ((recipe?.cookingTime ?? 0) > 0)
+                _buildTimeChip('Cook Time', (recipe?.cookingTime.toString() ?? '') + ' min'),
             ]
           ),
+          SizedBox(height: 12,),
           Wrap(
             alignment: WrapAlignment.center,
             spacing: 12.0,
@@ -110,6 +110,34 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
               );
             }),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTimeChip(String title, String value) {
+    return Container(
+      width: 130,
+      decoration: ShapeDecoration(
+        shape: StadiumBorder(),
+        color: Colors.black12,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Icon(Icons.timer),
+          Column(
+            children: [
+              Text(title),
+              Text(
+                value,
+                style: TextStyle(
+                  fontSize: 18
+                ),
+              ),
+            ]
+          ),
+          Container(),
         ],
       ),
     );
