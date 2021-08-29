@@ -85,7 +85,7 @@ class UnitAmount {
 
 /// Units that can be used for ingredients within this app.
 enum Unit {
-  GRAM, MILLI_GRAM, PCS, MILLI_LITRE, TABLE_SPOON, TEA_SPOON,
+  GRAM, MILLI_GRAM, PCS, MILLI_LITRE, TABLE_SPOON, TEA_SPOON, SPRINKLE,
 }
 
 
@@ -104,6 +104,8 @@ extension UnitAmountExtension on Unit {
         return "tbsp";
       case Unit.TEA_SPOON:
         return "tsp";
+      case Unit.SPRINKLE:
+        return "sprinkle";
     }
   }
 
@@ -121,6 +123,8 @@ extension UnitAmountExtension on Unit {
         return "table spoon";
       case Unit.TEA_SPOON:
         return "tea spoon";
+      case Unit.SPRINKLE:
+        return "sprinkle";
     }
   }
 }

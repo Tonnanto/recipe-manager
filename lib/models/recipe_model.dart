@@ -143,7 +143,7 @@ class RecipeFields {
 /// A recipe can have multiple types.
 /// Types can be used to filter recipes when searching
 enum RecipeType {
-  MAIN_DISH, DESSERT, APPETIZER, MEAT, VEGETARIAN, VEGAN, COOKING, BAKING, PASTRY, DRINK, OTHER
+  MAIN_DISH, DESSERT, APPETIZER, SNACK, MEAT, VEGETARIAN, VEGAN, COOKING, BAKING, PASTRY, DRINK, SAUCE_DIP, THERMOMIX, OTHER
 }
 
 extension RecipeTypeExtension on RecipeType {
@@ -169,6 +169,12 @@ extension RecipeTypeExtension on RecipeType {
         return 'Pastry';
       case RecipeType.DRINK:
         return 'Drink';
+      case RecipeType.SNACK:
+        return 'Snack';
+      case RecipeType.SAUCE_DIP:
+        return 'Sauce / Dip';
+      case RecipeType.THERMOMIX:
+        return 'Thermomix';
       case RecipeType.OTHER:
         return 'Other';
     }
