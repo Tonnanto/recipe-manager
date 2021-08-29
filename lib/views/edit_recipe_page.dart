@@ -276,7 +276,7 @@ class _EditRecipePageState extends State<EditRecipePage> {
                                 ),
                               ),
                               Flexible(
-                                flex: 2,
+                                flex: 3,
                                 child: DropdownButton<Unit>(
                                   key: UniqueKey(),
                                   items: List<DropdownMenuItem<Unit>>.generate(

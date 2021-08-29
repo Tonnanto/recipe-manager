@@ -56,8 +56,15 @@ class _RecipeListPageState extends State<RecipeListPage> {
   Widget _buildRecipeRow(int index) {
     var image = widget.recipeBook.recipes[index].image;
     return ListTile(
-      // TODO: Add Default Recipe Image
-      leading: image != null ? Image.memory(image) : Image.network("https://picsum.photos/300"),
+      leading: AspectRatio(
+        aspectRatio: 1.0,
+        child: FittedBox(
+          // TODO: Add Default Recipe Image
+          child: image != null ? Image.memory(image) : Image.network("https://picsum.photos/300"),
+          fit: BoxFit.cover,
+          clipBehavior: Clip.hardEdge,
+        ),
+      ),
       title: Text(widget.recipeBook.recipes[index].name),
       onTap: () {
         _pushRecipeDetailPage(index);
