@@ -20,11 +20,19 @@ class RecipeBookListPage extends StatefulWidget {
 
 class _RecipeBookListPageState extends State<RecipeBookListPage> {
   List<RecipeBook> recipeBooks = <RecipeBook>[];
+  bool isLoading = false;
 
   @override
   void initState() {
-    _refreshData();
     super.initState();
+    _refreshRecipeBooks();
+  }
+
+  /// Refreshes Data from DB and updates UI
+  Future _refreshRecipeBooks() async {
+    setState(() => isLoading = true);
+    this.recipeBooks = await PersistenceService.instance.readAllRecipeBooks();
+    setState(() => isLoading = false);
   }
 
   @override
@@ -52,7 +60,7 @@ class _RecipeBookListPageState extends State<RecipeBookListPage> {
   }
 
   Widget _buildBody() {
-    if (recipeBooks.isEmpty) {
+    if (isLoading) {
       return Center(child: CircularProgressIndicator());
     }
     return PageView.builder(
@@ -116,19 +124,7 @@ class _RecipeBookListPageState extends State<RecipeBookListPage> {
         .push(MaterialPageRoute(builder: (BuildContext context) {
       return EditRecipeBookPage(recipeBook: recipeBook,);
     })).then((_) {
-      _refreshData();
-    });
-  }
-
-  /// Refreshes Data from DB and updates UI
-  void _refreshData() {
-    PersistenceService.instance.readAllRecipeBooks().then((recipeBooks) {
-      setState(() {
-        this.recipeBooks = <RecipeBook>[];
-        recipeBooks.forEach((element) {
-          this.recipeBooks.add(element);
-        });
-      });
+      _refreshRecipeBooks();
     });
   }
 
@@ -145,7 +141,7 @@ class _RecipeBookListPageState extends State<RecipeBookListPage> {
         child: Text("Reset Demo Recipes"),
         onPressed: () {
           PersistenceService.instance.resetDemoData().then((_) {
-            _refreshData();
+            _refreshRecipeBooks();
             Navigator.of(context).pop();
           });
         },
@@ -156,7 +152,7 @@ class _RecipeBookListPageState extends State<RecipeBookListPage> {
       child: Text("Delete all Data"),
       onPressed: () {
         PersistenceService.instance.deleteAllData().then((_) {
-          _refreshData();
+          _refreshRecipeBooks();
           Navigator.of(context).pop();
         });
       },
