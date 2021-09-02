@@ -47,7 +47,7 @@ class _RecipeBookListPageState extends State<RecipeBookListPage> {
             },
             icon: Icon(Icons.settings_backup_restore),
             color: Colors.white,
-          )
+          ),
         ],
       ),
       body: _buildBody(),
