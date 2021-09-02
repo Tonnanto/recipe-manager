@@ -3,8 +3,8 @@ import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:recipe_manager/models/recipe_book_model.dart';
+import 'package:recipe_manager/utilities/data_service.dart';
 import 'package:recipe_manager/utilities/image_utils.dart';
-import 'package:recipe_manager/utilities/persistence.dart';
 
 class EditRecipeBookPage extends StatefulWidget {
   final RecipeBook? recipeBook;
@@ -249,7 +249,7 @@ class _EditRecipeBookPageState extends State<EditRecipeBookPage> {
       icon: glyph,
     );
 
-    await PersistenceService.instance.updateRecipeBook(recipeBook);
+    await DataService.instance.updateRecipeBook(recipeBook);
   }
 
   Future addRecipeBook() async {
@@ -259,7 +259,7 @@ class _EditRecipeBookPageState extends State<EditRecipeBookPage> {
       icon: glyph,
     );
 
-    await PersistenceService.instance.createRecipeBook(recipeBook);
+    await DataService.instance.createRecipeBook(recipeBook);
   }
 
   void _deleteRecipeBookAlert() {
@@ -284,7 +284,7 @@ class _EditRecipeBookPageState extends State<EditRecipeBookPage> {
             icon: Icon(Icons.delete_outline),
             label: Text("Delete"),
             onPressed: () {
-              PersistenceService.instance.deleteRecipeBook(widget.recipeBook?.id ?? 0).then((_) {
+              DataService.instance.deleteRecipeBook(widget.recipeBook?.id ?? 0).then((_) {
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
               });

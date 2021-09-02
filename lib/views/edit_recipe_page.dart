@@ -6,7 +6,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:recipe_manager/models/ingredient_model.dart';
 import 'package:recipe_manager/models/recipe_model.dart';
-import 'package:recipe_manager/utilities/persistence.dart';
+import 'package:recipe_manager/utilities/data_service.dart';
 import 'package:recipe_manager/views/widgets/keep_alive_page.dart';
 
 class EditRecipePage extends StatefulWidget {
@@ -657,7 +657,7 @@ class _EditRecipePageState extends State<EditRecipePage> {
     recipe.image = _formKey.currentState!.value['image'];
 
     Iterable<Ingredient> ingredients = (_formKey.currentState!.value['ingredients'] as List<dynamic>).cast<Ingredient>().where((i) => i.name.isNotEmpty && i.unitAmount.amount > 0);
-    await PersistenceService.instance.updateRecipe(recipe);
+    await DataService.instance.updateRecipe(recipe);
     await recipe.updateIngredients(ingredients);
   }
 
@@ -674,7 +674,7 @@ class _EditRecipePageState extends State<EditRecipePage> {
     );
 
     List<Ingredient> ingredients = (_formKey.currentState!.value['ingredients'] as List<dynamic>).cast<Ingredient>();
-    Recipe newRecipe = await PersistenceService.instance.createRecipe(recipe);
+    Recipe newRecipe = await DataService.instance.createRecipe(recipe);
     await newRecipe.updateIngredients(ingredients);
   }
 
@@ -703,7 +703,7 @@ class _EditRecipePageState extends State<EditRecipePage> {
             icon: Icon(Icons.delete_outline),
             label: Text("Delete"),
             onPressed: () {
-              PersistenceService.instance.deleteRecipe(widget.recipe?.id ?? 0).then((_) {
+              DataService.instance.deleteRecipe(widget.recipe?.id ?? 0).then((_) {
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();

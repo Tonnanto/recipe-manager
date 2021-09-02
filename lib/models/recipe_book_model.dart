@@ -7,8 +7,8 @@ import 'dart:ui';
 import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/services.dart';
 import 'package:recipe_manager/models/recipe_model.dart';
+import 'package:recipe_manager/utilities/data_service.dart';
 import 'package:recipe_manager/utilities/image_utils.dart';
-import 'package:recipe_manager/utilities/persistence.dart';
 
 final String tableRecipeBooks = 'recipe_books';
 
@@ -34,7 +34,7 @@ class RecipeBook {
   /// Updates the recipes field with data from the database
   Future<List<Recipe>> loadRecipes() async {
     if (this.id != null) {
-      this.recipes = await PersistenceService.instance.readRecipesFromBook(this.id!);
+      this.recipes = await DataService.instance.readRecipesFromBook(this.id!);
     }
     return recipes;
   }

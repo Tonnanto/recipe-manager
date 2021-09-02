@@ -62,4 +62,15 @@ abstract class DataService {
   Future<int> updateIngredient(Ingredient ingredient);
 
   Future<int> deleteIngredient(int id);
+
+
+  // ---------------------------------------------------------------------------
+  // DEMO DATA
+  // ---------------------------------------------------------------------------
+
+  Future deleteAllData();
+
+  Future resetDemoData();
+
+  Future addDemoData();
 }

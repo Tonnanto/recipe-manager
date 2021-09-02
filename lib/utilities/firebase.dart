@@ -97,4 +97,22 @@ class FirebaseService implements DataService {
     // TODO: implement updateRecipeBook
     throw UnimplementedError();
   }
+
+  @override
+  Future addDemoData() {
+    // TODO: implement addDemoData
+    throw UnimplementedError();
+  }
+
+  @override
+  Future deleteAllData() {
+    // TODO: implement deleteAllData
+    throw UnimplementedError();
+  }
+
+  @override
+  Future resetDemoData() {
+    // TODO: implement resetDemoData
+    throw UnimplementedError();
+  }
 }

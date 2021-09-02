@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:enum_to_string/enum_to_string.dart';
 import 'package:recipe_manager/models/ingredient_model.dart';
-import 'package:recipe_manager/utilities/persistence.dart';
+import 'package:recipe_manager/utilities/data_service.dart';
 
 
 final String tableRecipes = 'recipes';
@@ -39,7 +39,7 @@ class Recipe {
   /// Updates the ingredients field with data from the database
   Future<List<Ingredient>> loadIngredients() async {
     if (this.id != null) {
-      this.ingredients = await PersistenceService.instance.readIngredientsFromRecipe(this.id!);
+      this.ingredients = await DataService.instance.readIngredientsFromRecipe(this.id!);
     }
     return ingredients;
   }
@@ -52,18 +52,18 @@ class Recipe {
     for (Ingredient ingredient in newIngredients) {
       if (ingredient.id != null && oldIngredientIds.contains(ingredient.id!)) {
         // If id is known -> update ingredient in db
-        await PersistenceService.instance.updateIngredient(ingredient.copy(recipeID: this.id));
+        await DataService.instance.updateIngredient(ingredient.copy(recipeID: this.id));
 
       } else {
         // If id is unknown or no id created yet -> add ingredient to db
-        await PersistenceService.instance.createIngredient(ingredient.copy(recipeID: this.id));
+        await DataService.instance.createIngredient(ingredient.copy(recipeID: this.id));
       }
     }
 
     // Delete old ingredients that are not in newIngredients
     for (int oldIngredientId in oldIngredientIds) {
       if (!newIngredients.map((e) => e.id).contains(oldIngredientId)) {
-        PersistenceService.instance.deleteIngredient(oldIngredientId);
+        DataService.instance.deleteIngredient(oldIngredientId);
       }
     }
 
