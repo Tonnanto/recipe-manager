@@ -7,8 +7,9 @@ import 'package:recipe_manager/models/ingredient_model.dart';
 import 'package:recipe_manager/models/recipe_model.dart';
 import 'package:sqflite/sqflite.dart';
 
+import 'data_service.dart';
 
-class PersistenceService {
+class PersistenceService implements DataService {
   static final PersistenceService instance = PersistenceService._init();
   static Database? _database;
 
