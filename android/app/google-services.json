@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1011166619667",
+    "project_id": "recipe-manager-7439c",
+    "storage_bucket": "recipe-manager-7439c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1011166619667:android:8522cb4ca6436bfebdf7e6",
+        "android_client_info": {
+          "package_name": "de.stamme.recipe_manager"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1011166619667-9lpgtin5ki2nlcduc8vdga9hs8ka7qqe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDtuOKSZgTi_tBceDVYhLzXFNGAEU-iM80"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1011166619667-9lpgtin5ki2nlcduc8vdga9hs8ka7qqe.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
