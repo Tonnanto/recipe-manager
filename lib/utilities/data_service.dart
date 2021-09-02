@@ -1,5 +1,6 @@
 
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:recipe_manager/models/ingredient_model.dart';
 import 'package:recipe_manager/models/recipe_book_model.dart';
 import 'package:recipe_manager/models/recipe_model.dart';
@@ -12,7 +13,7 @@ abstract class DataService {
   static final DataService instance = DataService.getInstance();
 
   static DataService getInstance() {
-    if (Platform.isAndroid || Platform.isIOS) {
+    if ((defaultTargetPlatform == TargetPlatform.iOS) || (defaultTargetPlatform == TargetPlatform.android)) {
       return PersistenceService.instance;
     } else {
       return FirebaseService.instance;
