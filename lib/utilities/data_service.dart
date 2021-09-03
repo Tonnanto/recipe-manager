@@ -28,9 +28,9 @@ abstract class DataService {
 
   Future<List<RecipeBook>> readAllRecipeBooks();
 
-  Future<int> updateRecipeBook(RecipeBook recipeBook);
+  Future<String> updateRecipeBook(RecipeBook recipeBook);
 
-  Future<int> deleteRecipeBook(int id);
+  Future<String> deleteRecipeBook(String id);
 
 
   // ---------------------------------------------------------------------------
@@ -41,13 +41,13 @@ abstract class DataService {
 
   Future<List<Recipe>> readAllRecipes();
 
-  Future<List<Recipe>> readRecipesFromBook(int recipeBookID);
+  Future<List<Recipe>> readRecipesFromBook(String recipeBookID);
 
-  Future<Recipe> readRecipe(int recipeId);
+  Future<Recipe> readRecipe(String recipeId);
 
-  Future<int> updateRecipe(Recipe recipe);
+  Future<String> updateRecipe(Recipe recipe);
 
-  Future<int> deleteRecipe(int id);
+  Future<String> deleteRecipe(String id);
 
 
   // ---------------------------------------------------------------------------
@@ -58,11 +58,11 @@ abstract class DataService {
 
   Future<List<Ingredient>> readAllIngredient();
 
-  Future<List<Ingredient>> readIngredientsFromRecipe(int id);
+  Future<List<Ingredient>> readIngredientsFromRecipe(String id);
 
-  Future<int> updateIngredient(Ingredient ingredient);
+  Future<String> updateIngredient(Ingredient ingredient);
 
-  Future<int> deleteIngredient(int id);
+  Future<String> deleteIngredient(String id);
 
 
   // ---------------------------------------------------------------------------

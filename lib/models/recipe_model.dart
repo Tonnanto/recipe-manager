@@ -10,9 +10,9 @@ final String tableRecipes = 'recipes';
 class Recipe {
 
   final String name;
-  final int? id;
+  final String? id;
 
-  final int recipeBookID;
+  final String recipeBookID;
 
   final List<String> preparationSteps;
   final List<RecipeType> recipeTypes;
@@ -46,7 +46,7 @@ class Recipe {
 
   /// Updates the database with new ingredients for this recipe
   Future<Iterable<Ingredient>> updateIngredients(Iterable<Ingredient> newIngredients) async {
-    Iterable<int> oldIngredientIds = (await loadIngredients()).map((e) => e.id!);
+    Iterable<String> oldIngredientIds = (await loadIngredients()).map((e) => e.id!);
 
     // Update and add new ingredients
     for (Ingredient ingredient in newIngredients) {
@@ -61,7 +61,7 @@ class Recipe {
     }
 
     // Delete old ingredients that are not in newIngredients
-    for (int oldIngredientId in oldIngredientIds) {
+    for (String oldIngredientId in oldIngredientIds) {
       if (!newIngredients.map((e) => e.id).contains(oldIngredientId)) {
         DataService.instance.deleteIngredient(oldIngredientId);
       }
@@ -76,9 +76,9 @@ class Recipe {
     String imageString = map[RecipeFields.image] as String;
 
     return Recipe(
-      id: map[RecipeFields.id] as int?,
+      id: (map[RecipeFields.id] as int?)?.toString(),
       name: map[RecipeFields.name] as String,
-      recipeBookID: map[RecipeFields.recipeBookID] as int,
+      recipeBookID: (map[RecipeFields.recipeBookID] as int).toString(),
       preparationSteps: (map[RecipeFields.preparationSteps] as String).split(prepStepSeparator),
       recipeTypes: List.generate(recipeTypeStrings.length, (index) => EnumToString.fromString(RecipeType.values, recipeTypeStrings[index]) ?? RecipeType.OTHER),
       image: imageString.isNotEmpty ? Base64Decoder().convert(imageString) : null,
@@ -100,14 +100,14 @@ class Recipe {
 
   /// Returns a copy of the same Recipe with the given fields changed
   Recipe copy({
-    int? id,
+    String? id,
     String? name,
     List<String>? preparationSteps,
     List<RecipeType>? recipeTypes,
     Uint8List? image,
     int? preparationTime,
     int? cookingTime,
-    int? recipeBookID,
+    String? recipeBookID,
   }) {
     Recipe copy = Recipe(
       id: id ?? this.id,

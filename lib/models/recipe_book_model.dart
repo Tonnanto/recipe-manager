@@ -13,7 +13,7 @@ import 'package:recipe_manager/utilities/image_utils.dart';
 final String tableRecipeBooks = 'recipe_books';
 
 class RecipeBook {
-  final int? id;
+  final String? id;
   final String name;
 
   final RecipeBookColor color;
@@ -40,7 +40,7 @@ class RecipeBook {
   }
 
   static RecipeBook fromMap(Map<String, Object?> map) => RecipeBook(
-    id: map[RecipeBookFields.id] as int?,
+    id: (map[RecipeBookFields.id] as int?)?.toString(),
     name: map[RecipeBookFields.name] as String,
     color: EnumToString.fromString(RecipeBookColor.values, map[RecipeBookFields.color] as String) ?? RecipeBookColor.flora,
     icon: EnumToString.fromString(RecipeBookIcon.values, map[RecipeBookFields.icon] as String) ?? RecipeBookIcon.ingredients,
@@ -55,7 +55,7 @@ class RecipeBook {
 
   /// Returns a copy of the same RecipeBook with the given fields changed
   RecipeBook copy({
-    int? id,
+    String? id,
     String? name,
     RecipeBookColor? color,
     RecipeBookIcon? icon,

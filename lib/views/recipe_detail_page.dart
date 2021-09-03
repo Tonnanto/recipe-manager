@@ -6,7 +6,7 @@ import 'package:recipe_manager/utilities/persistence.dart';
 import 'package:recipe_manager/views/edit_recipe_page.dart';
 
 class RecipeDetailPage extends StatefulWidget {
-  final int recipeId;
+  final String recipeId;
 
   RecipeDetailPage({Key? key, required this.recipeId}) : super(key: key);
 

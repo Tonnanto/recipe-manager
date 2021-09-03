@@ -5,11 +5,11 @@ final String tableIngredients = 'ingredients';
 
 /// Each Recipe has multiple Ingredients
 class Ingredient {
-  late final int? id;
+  late final String? id;
   late String name;
   late final UnitAmount unitAmount;
 
-  final int recipeID;
+  final String recipeID;
 
   Ingredient({
     this.id,
@@ -20,8 +20,8 @@ class Ingredient {
 
   static Ingredient fromMap(Map<String, Object?> map) {
     return Ingredient(
-      id: map[IngredientFields.id] as int?,
-      recipeID: map[IngredientFields.recipeID] as int,
+      id: (map[IngredientFields.id] as int?)?.toString(),
+      recipeID: (map[IngredientFields.recipeID] as int).toString(),
       name: map[IngredientFields.name] as String,
       unitAmount: UnitAmount(EnumToString.fromString(Unit.values, map[IngredientFields.unit] as String) ?? Unit.GRAM, map[IngredientFields.amount] as double),
     );
@@ -37,10 +37,10 @@ class Ingredient {
 
   /// Returns a copy of the same Ingredient with the given fields changed
   Ingredient copy({
-    int? id,
+    String? id,
     String? name,
     UnitAmount? unitAmount,
-    int? recipeID,
+    String? recipeID,
   }) {
     Ingredient copy = Ingredient(
       id: id ?? this.id,

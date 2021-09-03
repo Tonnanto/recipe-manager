@@ -284,7 +284,7 @@ class _EditRecipeBookPageState extends State<EditRecipeBookPage> {
             icon: Icon(Icons.delete_outline),
             label: Text("Delete"),
             onPressed: () {
-              DataService.instance.deleteRecipeBook(widget.recipeBook?.id ?? 0).then((_) {
+              DataService.instance.deleteRecipeBook(widget.recipeBook?.id ?? '').then((_) {
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
               });

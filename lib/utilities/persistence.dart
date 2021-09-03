@@ -108,7 +108,7 @@ class PersistenceService implements DataService {
     print("Adding RecipeBook");
     final db = await instance.database;
     final id = await db.insert(tableRecipeBooks, recipeBook.toMap());
-    return recipeBook.copy(id: id);
+    return recipeBook.copy(id: id.toString());
   }
 
   Future<List<RecipeBook>> readAllRecipeBooks() async {
@@ -121,25 +121,25 @@ class PersistenceService implements DataService {
     return result.map((map) => RecipeBook.fromMap(map)).toList();
   }
 
-  Future<int> updateRecipeBook(RecipeBook recipeBook) async {
+  Future<String> updateRecipeBook(RecipeBook recipeBook) async {
     final db = await instance.database;
 
-    return db.update(
+    return (await db.update(
       tableRecipeBooks,
       recipeBook.toMap(),
       where: '${RecipeBookFields.id} = ?',
       whereArgs: [recipeBook.id],
-    );
+    )).toString();
   }
 
-  Future<int> deleteRecipeBook(int id) async {
+  Future<String> deleteRecipeBook(String id) async {
     final db = await instance.database;
 
-    return await db.delete(
+    return (await db.delete(
       tableRecipeBooks,
       where: '${RecipeBookFields.id} = ?',
       whereArgs: [id],
-    );
+    )).toString();
   }
 
 
@@ -151,7 +151,7 @@ class PersistenceService implements DataService {
     print("Adding Recipe");
     final db = await instance.database;
     final id = await db.insert(tableRecipes, recipe.toMap());
-    return recipe.copy(id: id);
+    return recipe.copy(id: id.toString());
   }
 
   Future<List<Recipe>> readAllRecipes() async {
@@ -164,7 +164,7 @@ class PersistenceService implements DataService {
     return result.map((map) => Recipe.fromMap(map)).toList();
   }
 
-  Future<List<Recipe>> readRecipesFromBook(int recipeBookID) async {
+  Future<List<Recipe>> readRecipesFromBook(String recipeBookID) async {
     final db = await instance.database;
 
     // TODO: Order?
@@ -179,7 +179,7 @@ class PersistenceService implements DataService {
     return result.map((map) => Recipe.fromMap(map)).toList();
   }
 
-  Future<Recipe> readRecipe(int recipeId) async {
+  Future<Recipe> readRecipe(String recipeId) async {
     final db = await instance.database;
 
     final result = await db.query(
@@ -192,25 +192,25 @@ class PersistenceService implements DataService {
     return Recipe.fromMap(result.first);
   }
 
-  Future<int> updateRecipe(Recipe recipe) async {
+  Future<String> updateRecipe(Recipe recipe) async {
     final db = await instance.database;
 
-    return db.update(
+    return (await db.update(
       tableRecipes,
       recipe.toMap(),
       where: '${RecipeFields.id} = ?',
       whereArgs: [recipe.id],
-    );
+    )).toString();
   }
 
-  Future<int> deleteRecipe(int id) async {
+  Future<String> deleteRecipe(String id) async {
     final db = await instance.database;
 
-    return await db.delete(
+    return (await db.delete(
       tableRecipes,
       where: '${RecipeFields.id} = ?',
       whereArgs: [id],
-    );
+    )).toString();
   }
 
 
@@ -222,7 +222,7 @@ class PersistenceService implements DataService {
     print("Adding Ingredient");
     final db = await instance.database;
     final id = await db.insert(tableIngredients, ingredient.toMap());
-    return ingredient.copy(id: id);
+    return ingredient.copy(id: id.toString());
   }
 
   Future<List<Ingredient>> readAllIngredient() async {
@@ -235,7 +235,7 @@ class PersistenceService implements DataService {
     return result.map((map) => Ingredient.fromMap(map)).toList();
   }
 
-  Future<List<Ingredient>> readIngredientsFromRecipe(int id) async {
+  Future<List<Ingredient>> readIngredientsFromRecipe(String id) async {
     final db = await instance.database;
 
     // TODO: Order?
@@ -250,25 +250,25 @@ class PersistenceService implements DataService {
     return result.map((map) => Ingredient.fromMap(map)).toList();
   }
 
-  Future<int> updateIngredient(Ingredient ingredient) async {
+  Future<String> updateIngredient(Ingredient ingredient) async {
     final db = await instance.database;
 
-    return db.update(
+    return (await db.update(
       tableIngredients,
       ingredient.toMap(),
       where: '${IngredientFields.id} = ?',
       whereArgs: [ingredient.id],
-    );
+    )).toString();
   }
 
-  Future<int> deleteIngredient(int id) async {
+  Future<String> deleteIngredient(String id) async {
     final db = await instance.database;
 
-    return await db.delete(
+    return (await db.delete(
       tableIngredients,
       where: '${IngredientFields.id} = ?',
       whereArgs: [id],
-    );
+    )).toString();
   }
 
 

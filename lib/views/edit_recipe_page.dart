@@ -11,7 +11,7 @@ import 'package:recipe_manager/views/widgets/keep_alive_page.dart';
 
 class EditRecipePage extends StatefulWidget {
   final Recipe? recipe;
-  final int recipeBookID;
+  final String recipeBookID;
 
   const EditRecipePage({
     Key? key,
@@ -257,8 +257,8 @@ class _EditRecipePageState extends State<EditRecipePage> {
                             child: ElevatedButton.icon(
                               onPressed: () {
                                 field.setState(() {
-                                  // recipeID -1 -> not assigned to a recipe yet
-                                  (field.value as List).add(Ingredient(name: '', unitAmount: UnitAmount(Unit.GRAM, 0), recipeID: -1));
+                                  // recipeID '' -> not assigned to a recipe yet
+                                  (field.value as List).add(Ingredient(name: '', unitAmount: UnitAmount(Unit.GRAM, 0), recipeID: ''));
                                 });
                               },
                               label: Text('Add Ingredient'),
@@ -703,7 +703,7 @@ class _EditRecipePageState extends State<EditRecipePage> {
             icon: Icon(Icons.delete_outline),
             label: Text("Delete"),
             onPressed: () {
-              DataService.instance.deleteRecipe(widget.recipe?.id ?? 0).then((_) {
+              DataService.instance.deleteRecipe(widget.recipe?.id ?? '').then((_) {
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();

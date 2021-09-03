@@ -39,24 +39,25 @@ class FirebaseService implements DataService {
     print(query.docs.length);
 
     for (QueryDocumentSnapshot doc in query.docs) {
-      int id = int.tryParse(doc.id) ?? -1;
+      String id = doc.id;
       String name = doc.get('name') as String;
       RecipeBookIcon icon = EnumToString.fromString(RecipeBookIcon.values, doc.get('icon') as String) ?? RecipeBookIcon.values.first;
       RecipeBookColor color = EnumToString.fromString(RecipeBookColor.values, doc.get('color') as String) ?? RecipeBookColor.values.first;
-      recipeBooks.add(RecipeBook(name: name, color: color, icon: icon));
+      RecipeBook recipeBook = RecipeBook(name: name, color: color, icon: icon);
+      recipeBooks.add(recipeBook.copy(id: id));
     }
 
     return recipeBooks;
   }
 
   @override
-  Future<int> updateRecipeBook(RecipeBook recipeBook) async {
+  Future<String> updateRecipeBook(RecipeBook recipeBook) async {
     // TODO: implement updateRecipeBook
     throw UnimplementedError();
   }
 
   @override
-  Future<int> deleteRecipeBook(int id) async {
+  Future<String> deleteRecipeBook(String id) async {
     CollectionReference recipeBookCollection = FirebaseFirestore.instance.collection('recipe_books');
 
     await recipeBookCollection.doc('$id')
@@ -84,25 +85,25 @@ class FirebaseService implements DataService {
   }
 
   @override
-  Future<List<Recipe>> readRecipesFromBook(int recipeBookID) async {
+  Future<List<Recipe>> readRecipesFromBook(String recipeBookID) async {
     // TODO: implement readRecipesFromBook
     throw UnimplementedError();
   }
 
   @override
-  Future<Recipe> readRecipe(int recipeId) async {
+  Future<Recipe> readRecipe(String recipeId) async {
     // TODO: implement readRecipe
     throw UnimplementedError();
   }
 
   @override
-  Future<int> updateRecipe(Recipe recipe) async {
+  Future<String> updateRecipe(Recipe recipe) async {
     // TODO: implement updateRecipe
     throw UnimplementedError();
   }
 
   @override
-  Future<int> deleteRecipe(int id) async {
+  Future<String> deleteRecipe(String id) async {
     // TODO: implement deleteRecipe
     throw UnimplementedError();
   }
@@ -124,19 +125,19 @@ class FirebaseService implements DataService {
   }
 
   @override
-  Future<List<Ingredient>> readIngredientsFromRecipe(int id) async {
+  Future<List<Ingredient>> readIngredientsFromRecipe(String id) async {
     // TODO: implement readIngredientsFromRecipe
     throw UnimplementedError();
   }
 
   @override
-  Future<int> updateIngredient(Ingredient ingredient) async {
+  Future<String> updateIngredient(Ingredient ingredient) async {
     // TODO: implement updateIngredient
     throw UnimplementedError();
   }
 
   @override
-  Future<int> deleteIngredient(int id) async {
+  Future<String> deleteIngredient(String id) async {
     // TODO: implement deleteIngredient
     throw UnimplementedError();
   }
