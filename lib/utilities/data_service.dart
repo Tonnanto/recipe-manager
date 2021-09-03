@@ -43,26 +43,26 @@ abstract class DataService {
 
   Future<List<Recipe>> readRecipesFromBook(String recipeBookID);
 
-  Future<Recipe> readRecipe(String recipeId);
+  Future<Recipe> readRecipe(Recipe recipe);
 
   Future<String> updateRecipe(Recipe recipe);
 
-  Future<String> deleteRecipe(String id);
+  Future<String> deleteRecipe(Recipe recipe);
 
 
   // ---------------------------------------------------------------------------
   // CRUD Operations for Ingredients
   // ---------------------------------------------------------------------------
 
-  Future<Ingredient> createIngredient(Ingredient ingredient);
+  Future<Ingredient> createIngredient(Ingredient ingredient, Recipe recipe);
 
   Future<List<Ingredient>> readAllIngredient();
 
-  Future<List<Ingredient>> readIngredientsFromRecipe(String id);
+  Future<List<Ingredient>> readIngredientsFromRecipe(Recipe recipe);
 
-  Future<String> updateIngredient(Ingredient ingredient);
+  Future<String> updateIngredient(Ingredient ingredient, Recipe recipe);
 
-  Future<String> deleteIngredient(String id);
+  Future<String> deleteIngredient(String ingredientId, Recipe recipe);
 
 
   // ---------------------------------------------------------------------------

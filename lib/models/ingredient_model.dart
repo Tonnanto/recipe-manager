@@ -18,23 +18,6 @@ class Ingredient {
     required this.recipeID
   });
 
-  static Ingredient fromMap(Map<String, Object?> map) {
-    return Ingredient(
-      id: (map[IngredientFields.id] as int?)?.toString(),
-      recipeID: (map[IngredientFields.recipeID] as int).toString(),
-      name: map[IngredientFields.name] as String,
-      unitAmount: UnitAmount(EnumToString.fromString(Unit.values, map[IngredientFields.unit] as String) ?? Unit.GRAM, map[IngredientFields.amount] as double),
-    );
-  }
-
-  Map<String, Object?> toMap() => {
-    IngredientFields.id: id,
-    IngredientFields.name: name,
-    IngredientFields.amount: unitAmount.amount,
-    IngredientFields.unit: EnumToString.convertToString(unitAmount.unit),
-    IngredientFields.recipeID: recipeID,
-  };
-
   /// Returns a copy of the same Ingredient with the given fields changed
   Ingredient copy({
     String? id,

@@ -39,20 +39,6 @@ class RecipeBook {
     return recipes;
   }
 
-  static RecipeBook fromMap(Map<String, Object?> map) => RecipeBook(
-    id: (map[RecipeBookFields.id] as int?)?.toString(),
-    name: map[RecipeBookFields.name] as String,
-    color: EnumToString.fromString(RecipeBookColor.values, map[RecipeBookFields.color] as String) ?? RecipeBookColor.flora,
-    icon: EnumToString.fromString(RecipeBookIcon.values, map[RecipeBookFields.icon] as String) ?? RecipeBookIcon.ingredients,
-  );
-
-  Map<String, Object?> toMap() => {
-    RecipeBookFields.id: id,
-    RecipeBookFields.name: name,
-    RecipeBookFields.color: EnumToString.convertToString(color),
-    RecipeBookFields.icon: EnumToString.convertToString(icon),
-  };
-
   /// Returns a copy of the same RecipeBook with the given fields changed
   RecipeBook copy({
     String? id,

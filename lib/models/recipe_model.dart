@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:html';
 import 'dart:typed_data';
 import 'package:enum_to_string/enum_to_string.dart';
 import 'package:recipe_manager/models/ingredient_model.dart';
@@ -39,7 +40,7 @@ class Recipe {
   /// Updates the ingredients field with data from the database
   Future<List<Ingredient>> loadIngredients() async {
     if (this.id != null) {
-      this.ingredients = await DataService.instance.readIngredientsFromRecipe(this.id!);
+      this.ingredients = await DataService.instance.readIngredientsFromRecipe(this);
     }
     return ingredients;
   }
@@ -52,51 +53,23 @@ class Recipe {
     for (Ingredient ingredient in newIngredients) {
       if (ingredient.id != null && oldIngredientIds.contains(ingredient.id!)) {
         // If id is known -> update ingredient in db
-        await DataService.instance.updateIngredient(ingredient.copy(recipeID: this.id));
+        await DataService.instance.updateIngredient(ingredient.copy(recipeID: this.id), this);
 
       } else {
         // If id is unknown or no id created yet -> add ingredient to db
-        await DataService.instance.createIngredient(ingredient.copy(recipeID: this.id));
+        await DataService.instance.createIngredient(ingredient.copy(recipeID: this.id), this);
       }
     }
 
     // Delete old ingredients that are not in newIngredients
     for (String oldIngredientId in oldIngredientIds) {
       if (!newIngredients.map((e) => e.id).contains(oldIngredientId)) {
-        DataService.instance.deleteIngredient(oldIngredientId);
+        DataService.instance.deleteIngredient(oldIngredientId, this);
       }
     }
 
     return newIngredients;
   }
-
-  static Recipe fromMap(Map<String, Object?> map) {
-
-    List<String> recipeTypeStrings = (map[RecipeFields.recipeTypes] as String).split(recipeTypeSeparator);
-    String imageString = map[RecipeFields.image] as String;
-
-    return Recipe(
-      id: (map[RecipeFields.id] as int?)?.toString(),
-      name: map[RecipeFields.name] as String,
-      recipeBookID: (map[RecipeFields.recipeBookID] as int).toString(),
-      preparationSteps: (map[RecipeFields.preparationSteps] as String).split(prepStepSeparator),
-      recipeTypes: List.generate(recipeTypeStrings.length, (index) => EnumToString.fromString(RecipeType.values, recipeTypeStrings[index]) ?? RecipeType.OTHER),
-      image: imageString.isNotEmpty ? Base64Decoder().convert(imageString) : null,
-      preparationTime: map[RecipeFields.preparationTime] as int,
-      cookingTime: map[RecipeFields.cookingTime] as int,
-    );
-  }
-
-  Map<String, Object?> toMap() => {
-    RecipeFields.id: id,
-    RecipeFields.name: name,
-    RecipeFields.preparationSteps: preparationSteps.join(prepStepSeparator),
-    RecipeFields.recipeTypes: (List.generate(recipeTypes.length, (index) => EnumToString.convertToString(recipeTypes[index]))).join(recipeTypeSeparator),
-    RecipeFields.image: image != null ? Base64Encoder().convert(image!) : "",
-    RecipeFields.preparationTime: preparationTime,
-    RecipeFields.cookingTime: cookingTime,
-    RecipeFields.recipeBookID: recipeBookID,
-  };
 
   /// Returns a copy of the same Recipe with the given fields changed
   Recipe copy({

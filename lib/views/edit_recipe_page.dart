@@ -703,11 +703,13 @@ class _EditRecipePageState extends State<EditRecipePage> {
             icon: Icon(Icons.delete_outline),
             label: Text("Delete"),
             onPressed: () {
-              DataService.instance.deleteRecipe(widget.recipe?.id ?? '').then((_) {
-                Navigator.of(context).pop();
-                Navigator.of(context).pop();
-                Navigator.of(context).pop();
-              });
+              if (widget.recipe != null) {
+                DataService.instance.deleteRecipe(widget.recipe!).then((_) {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                });
+              }
             },
           ),
         )
