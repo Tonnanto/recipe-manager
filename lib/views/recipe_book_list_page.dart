@@ -65,7 +65,7 @@ class _RecipeBookListPageState extends State<RecipeBookListPage> {
     }
     return PageView.builder(
         itemCount: recipeBooks.length,
-        controller: PageController(viewportFraction: 0.55),
+        controller: PageController(viewportFraction: 250 / (MediaQuery.of(context).size.width)),
         itemBuilder: (BuildContext context, int index) {
           return _buildRecipeBookColumn(index);
         });

@@ -4,7 +4,6 @@ import 'dart:async';
 import 'dart:typed_data';
 import 'dart:ui';
 
-import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/services.dart';
 import 'package:recipe_manager/models/recipe_model.dart';
 import 'package:recipe_manager/utilities/data_service.dart';

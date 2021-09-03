@@ -1,5 +1,4 @@
 
-import 'package:enum_to_string/enum_to_string.dart';
 
 final String tableIngredients = 'ingredients';
 
