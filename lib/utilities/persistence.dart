@@ -181,8 +181,6 @@ class PersistenceService implements DataService {
   Future<List<RecipeBook>> readAllRecipeBooks() async {
     final db = await instance.database;
 
-    // TODO: Order?
-    // final orderBy = '${NoteFields.time} ASC';
     final result = await db.query(tableRecipeBooks);
     print("All Recipe Books: \n$result");
     return result.map((map) => recipeBookFromMap(map)).toList();
@@ -224,8 +222,6 @@ class PersistenceService implements DataService {
   Future<List<Recipe>> readAllRecipes() async {
     final db = await instance.database;
 
-    // TODO: Order?
-    // final orderBy = '${NoteFields.time} ASC';
     final result = await db.query(tableRecipes);
     print("All Recipes: \n$result");
     return result.map((map) => recipeFromMap(map)).toList();
@@ -234,8 +230,6 @@ class PersistenceService implements DataService {
   Future<List<Recipe>> readRecipesFromBook(String recipeBookID) async {
     final db = await instance.database;
 
-    // TODO: Order?
-    // final orderBy = '${NoteFields.time} ASC';
     final result = await db.query(
       tableRecipes,
       where: '${RecipeFields.recipeBookID} = ?',
@@ -295,8 +289,6 @@ class PersistenceService implements DataService {
   Future<List<Ingredient>> readAllIngredient() async {
     final db = await instance.database;
 
-    // TODO: Order?
-    // final orderBy = '${NoteFields.time} ASC';
     final result = await db.query(tableIngredients);
     print("All Ingredients: \n$result");
     return result.map((map) => ingredientFromMap(map)).toList();
@@ -305,8 +297,6 @@ class PersistenceService implements DataService {
   Future<List<Ingredient>> readIngredientsFromRecipe(Recipe recipe) async {
     final db = await instance.database;
 
-    // TODO: Order?
-    // final orderBy = '${NoteFields.time} ASC';
     final result = await db.query(
       tableIngredients,
       where: '${IngredientFields.recipeID} = ?',

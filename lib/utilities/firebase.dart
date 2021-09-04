@@ -181,12 +181,6 @@ class FirebaseService implements DataService {
   }
 
   @override
-  Future<List<Recipe>> readAllRecipes() async {
-    // TODO: implement readAllRecipes
-    throw UnimplementedError();
-  }
-
-  @override
   Future<List<Recipe>> readRecipesFromBook(String recipeBookID) async {
     List<Recipe> recipes = [];
 
@@ -281,12 +275,6 @@ class FirebaseService implements DataService {
   }
 
   @override
-  Future<List<Ingredient>> readAllIngredient() async {
-    // TODO: implement readAllIngredient
-    throw UnimplementedError();
-  }
-
-  @override
   Future<List<Ingredient>> readIngredientsFromRecipe(Recipe recipe) async {
     List<Ingredient> ingredients = [];
 
@@ -356,21 +344,22 @@ class FirebaseService implements DataService {
   Future addDemoData() async {
     print("Adding Demo Data");
 
-
     List<RecipeBook> recipeBooks = await getDemoRecipeBooks();
     List<Recipe> recipes = await getDemoRecipes();
     List<Ingredient> ingredients = await getDemoIngredients();
 
-
     for (RecipeBook recipeBook in recipeBooks) {
       String? newRecipeBookId = (await createRecipeBook(recipeBook)).id;
 
-      for (Recipe recipe in recipes.where((element) => element.recipeBookID == recipeBook.id)) {
-        String? newRecipeId = (await createRecipe(recipe.copy(recipeBookID: newRecipeBookId))).id;
+      for (Recipe recipe in recipes
+          .where((element) => element.recipeBookID == recipeBook.id)) {
+        String? newRecipeId =
+            (await createRecipe(recipe.copy(recipeBookID: newRecipeBookId))).id;
 
-        for (Ingredient ingredient in ingredients.where((element) => element.recipeID == recipe.id)) {
-          await createIngredient(ingredient.copy(recipeID: newRecipeId), recipe.copy(recipeBookID: newRecipeBookId));
-
+        for (Ingredient ingredient
+            in ingredients.where((element) => element.recipeID == recipe.id)) {
+          await createIngredient(ingredient.copy(recipeID: newRecipeId),
+              recipe.copy(recipeBookID: newRecipeBookId));
         }
       }
     }
@@ -378,7 +367,8 @@ class FirebaseService implements DataService {
 
   @override
   Future deleteAllData() async {
-    CollectionReference recipeBookCollection = FirebaseFirestore.instance.collection('recipe_books');
+    CollectionReference recipeBookCollection =
+        FirebaseFirestore.instance.collection('recipe_books');
     QuerySnapshot query = await recipeBookCollection.get();
 
     WriteBatch batch = FirebaseFirestore.instance.batch();
@@ -386,10 +376,12 @@ class FirebaseService implements DataService {
     for (QueryDocumentSnapshot recipeBookSnap in query.docs) {
       DocumentReference recipeBookDoc = recipeBookSnap.reference;
 
-      for (QueryDocumentSnapshot recipeSnap in (await recipeBookDoc.collection('recipes').get()).docs) {
+      for (QueryDocumentSnapshot recipeSnap
+          in (await recipeBookDoc.collection('recipes').get()).docs) {
         DocumentReference recipeDoc = recipeSnap.reference;
 
-        for (QueryDocumentSnapshot ingredientSnap in (await recipeDoc.collection('ingredients').get()).docs) {
+        for (QueryDocumentSnapshot ingredientSnap
+            in (await recipeDoc.collection('ingredients').get()).docs) {
           DocumentReference ingredientDoc = ingredientSnap.reference;
           batch.delete(ingredientDoc);
         }

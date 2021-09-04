@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
@@ -31,12 +32,17 @@ class _EditRecipeBookPageState extends State<EditRecipeBookPage> {
   void initState() {
     super.initState();
 
+    Random rnd = new Random();
+    randomListItem(List lst) => lst[rnd.nextInt(lst.length)];
+
     name = widget.recipeBook?.name ?? "";
     color = widget.recipeBook?.color ??
-        RecipeBookColor.values.first; // TODO: randomize
+        randomListItem(RecipeBookColor.values);
     glyph = widget.recipeBook?.icon ??
-        RecipeBookIcon.values.first; // TODO: randomize
+        randomListItem(RecipeBookIcon.values);
   }
+
+
 
   @override
   Widget build(BuildContext context) {

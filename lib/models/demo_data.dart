@@ -11,27 +11,19 @@ Future<List<RecipeBook>> getDemoRecipeBooks() async {
   RecipeBook recipeBook1 = RecipeBook(
       id: '1',
       name: "Antons Recipes",
-      color: RecipeBookColor.banana,
-      icon: RecipeBookIcon.cooking_hat);
-
-  RecipeBook recipeBook2 = RecipeBook(
-      name: "Felix Recipe Book",
       color: RecipeBookColor.flora,
       icon: RecipeBookIcon.ingredients);
-  RecipeBook recipeBook3 = RecipeBook(
+  RecipeBook recipeBook2 = RecipeBook(
+      id: '2',
       name: "Julia's Back Rezepte",
       color: RecipeBookColor.cantaloupe,
-      icon: RecipeBookIcon.dishes);
-  RecipeBook recipeBook4 = RecipeBook(
-      name: "Kochbuch von Silke",
-      color: RecipeBookColor.carnation,
-      icon: RecipeBookIcon.pan);
-  RecipeBook recipeBook5 = RecipeBook(
+      icon: RecipeBookIcon.cooking_hat);
+  RecipeBook recipeBook3 = RecipeBook(
       name: "Holgers BBQ",
       color: RecipeBookColor.salmon,
       icon: RecipeBookIcon.man);
 
-  return [recipeBook1, recipeBook2, recipeBook3, recipeBook4, recipeBook5];
+  return [recipeBook1, recipeBook2, recipeBook3];
 }
 
 /// Returns some demo recipes
@@ -136,13 +128,54 @@ Future<List<Recipe>> getDemoRecipes() async {
       preparationTime: 5
   );
 
+  Recipe recipe6 = Recipe(
+      id: '6',
+      name: "Kichererbsen-Hirse-Backling",
+      recipeBookID: '1',
+      preparationSteps: [
+        "Hirse in einem Sieb mit heißem Wasser abspülen.",
+        "Brühe aufkochen, Hirse einrühren und bei wenig Hitze mit einem Deckel in ca. 20 min garen.",
+        "Zwiebel und Knoblauch schälen, fein hacken und anschließend die Möhre schälen, raspeln. ",
+        "Öl auf mittlerer Stufe erhitzen, Zwiebel, Knoblauch und Möhre kurz anschwitzen.",
+        "Kichererbsen mit dem Stampfer groß zerdrücken, alle Zutaten zugeben und zu einer homogenen Masse mischen. Nun mit Gewürzen kräftig abschmecken.",
+        "Backofen bei 160 Grad vorheizen.",
+        "Backpapier auf ein Backblech legen und mit Öl einpinseln.",
+        "Aus der Masse mit einem Eisportionierer kleine Bratlinge formen, auf das Blech setzen und etwas flach drücken.",
+        "Mit Öl einpinseln und im Backofen bei 160 Grad 15-20 min backen, einmal umdrehen.",
+      ],
+      cookingTime: 17,
+      image: (await rootBundle.load('assets/images/recipes/demoRecipe6.jpg'))
+          .buffer
+          .asUint8List(),
+      recipeTypes: [RecipeType.MAIN_DISH, RecipeType.SNACK, RecipeType.BAKING, RecipeType.VEGAN],
+      preparationTime: 35
+  );
+
+  Recipe recipe7 = Recipe(
+      id: '7',
+      name: "Bananenbrot",
+      recipeBookID: '2',
+      preparationSteps: [
+        "Ofen auf 180 Grad Ober-/Unterhitze (Umluft: 160 Grad) vorheizen. Kastenform (Innenmaße 23 x 10 cm) gut einfetten. Bananen mit einer Gabel in einer Schüssel zerdrücken.",
+        "Vanilleschote mit einem Messer der Länge nach einritzen und mit dem Messerrücken auskratzen. Öl mit braunem Zucker und Eier verquirlen. Mehl, Backpulver, Salz, Zimt und Vanilleschote vermischen und mit der Öl-Eiermasse verrühren. Bananen-Püree einrühren. Teig in die Form geben und im vorgeheizten Ofen etwa 55 Minuten backen. Das Bananenbrot ergibt ca. 10 Stücke.",
+      ],
+      cookingTime: 20,
+      image: (await rootBundle.load('assets/images/recipes/demoRecipe7.jpg'))
+          .buffer
+          .asUint8List(),
+      recipeTypes: [RecipeType.BAKING, RecipeType.SNACK, RecipeType.VEGETARIAN],
+      preparationTime: 55
+  );
+
 
   return [
     recipe1,
     recipe2,
     recipe3,
     recipe4,
-    recipe5
+    recipe5,
+    recipe6,
+    recipe7
   ];
 }
 
@@ -209,5 +242,33 @@ Future<List<Ingredient>> getDemoIngredients() async {
     Ingredient(name: "Schafskäse", unitAmount: UnitAmount(Unit.GRAM, 100), recipeID: '5'),
     Ingredient(name: "Ajvar", unitAmount: UnitAmount(Unit.GRAM, 100), recipeID: '5'),
     Ingredient(name: "Frischkäse", unitAmount: UnitAmount(Unit.GRAM, 200), recipeID: '5'),
+
+    // Recipe 6
+    Ingredient(name: "Kreuzkümmel", unitAmount: UnitAmount(Unit.TEA_SPOON, 0.5), recipeID: '6'),
+    Ingredient(name: "Möhre", unitAmount: UnitAmount(Unit.PCS, 1), recipeID: '6'),
+    Ingredient(name: "Pfeffer", unitAmount: UnitAmount(Unit.TEA_SPOON, 1), recipeID: '6'),
+    Ingredient(name: "Tomatenmark", unitAmount: UnitAmount(Unit.TABLE_SPOON, 2), recipeID: '6'),
+    Ingredient(name: "Hirse", unitAmount: UnitAmount(Unit.GRAM, 100), recipeID: '6'),
+    Ingredient(name: "Salz", unitAmount: UnitAmount(Unit.TEA_SPOON, 1), recipeID: '6'),
+    Ingredient(name: "Kichererbsenmehl", unitAmount: UnitAmount(Unit.TABLE_SPOON, 2), recipeID: '6'),
+    Ingredient(name: "Zwiebel", unitAmount: UnitAmount(Unit.PCS, 1), recipeID: '6'),
+    Ingredient(name: "Gemüsebrühe", unitAmount: UnitAmount(Unit.MILLI_LITRE, 200), recipeID: '6'),
+    Ingredient(name: "Kichererbsen", unitAmount: UnitAmount(Unit.GRAM, 300), recipeID: '6'),
+    Ingredient(name: "Petersilie", unitAmount: UnitAmount(Unit.GRAM, 50), recipeID: '6'),
+    Ingredient(name: "Olivenöl", unitAmount: UnitAmount(Unit.TABLE_SPOON, 2), recipeID: '6'),
+    Ingredient(name: "Haferflocken", unitAmount: UnitAmount(Unit.TABLE_SPOON, 2), recipeID: '6'),
+    Ingredient(name: "Knoblauch", unitAmount: UnitAmount(Unit.PCS, 1), recipeID: '6'),
+    Ingredient(name: "Koriander", unitAmount: UnitAmount(Unit.GRAM, 20), recipeID: '6'),
+
+    // Recipe 7: Bananenbrot
+    Ingredient(name: "reife Bananen", unitAmount: UnitAmount(Unit.PCS, 3), recipeID: '7'),
+    Ingredient(name: "neutrales Öl", unitAmount: UnitAmount(Unit.MILLI_LITRE, 80), recipeID: '7'),
+    Ingredient(name: "brauner Zucker", unitAmount: UnitAmount(Unit.GRAM, 110), recipeID: '7'),
+    Ingredient(name: "Eier (Gr. M)", unitAmount: UnitAmount(Unit.PCS, 2), recipeID: '7'),
+    Ingredient(name: "Weizenmehl (Type 405)", unitAmount: UnitAmount(Unit.GRAM, 200), recipeID: '7'),
+    Ingredient(name: "Backpulver", unitAmount: UnitAmount(Unit.TEA_SPOON, 3), recipeID: '7'),
+    Ingredient(name: "Salz", unitAmount: UnitAmount(Unit.TEA_SPOON, 0.5), recipeID: '7'),
+    Ingredient(name: "Vanilleschote", unitAmount: UnitAmount(Unit.PCS, 1), recipeID: '7'),
+    Ingredient(name: "Zimt", unitAmount: UnitAmount(Unit.TEA_SPOON, 0.5), recipeID: '7'),
   ];
 }
