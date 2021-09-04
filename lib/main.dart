@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:recipe_manager/utilities/persistence.dart';
 import 'package:recipe_manager/views/recipe_book_list_page.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp();
+
   runApp(RecipeManagerApp());
 }
 
 class RecipeManagerApp extends StatelessWidget {
   // This widget is the root of your application.
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

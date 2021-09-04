@@ -1,4 +1,7 @@
 
+import 'dart:convert';
+
+import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 import 'package:recipe_manager/models/demo_data.dart';
@@ -7,8 +10,9 @@ import 'package:recipe_manager/models/ingredient_model.dart';
 import 'package:recipe_manager/models/recipe_model.dart';
 import 'package:sqflite/sqflite.dart';
 
+import 'data_service.dart';
 
-class PersistenceService {
+class PersistenceService implements DataService {
   static final PersistenceService instance = PersistenceService._init();
   static Database? _database;
 
@@ -99,6 +103,70 @@ class PersistenceService {
     db.close();
   }
 
+
+
+  // ---------------------------------------------------------------------------
+  // Converting Objects to and from Map
+  // ---------------------------------------------------------------------------
+
+  RecipeBook recipeBookFromMap(Map<String, Object?> map) => RecipeBook(
+    id: (map[RecipeBookFields.id] as int?)?.toString(),
+    name: map[RecipeBookFields.name] as String,
+    color: EnumToString.fromString(RecipeBookColor.values, map[RecipeBookFields.color] as String) ?? RecipeBookColor.flora,
+    icon: EnumToString.fromString(RecipeBookIcon.values, map[RecipeBookFields.icon] as String) ?? RecipeBookIcon.ingredients,
+  );
+
+  Map<String, Object?> recipeBookToMap(RecipeBook recipeBook) => {
+    RecipeBookFields.id: recipeBook.id,
+    RecipeBookFields.name: recipeBook.name,
+    RecipeBookFields.color: EnumToString.convertToString(recipeBook.color),
+    RecipeBookFields.icon: EnumToString.convertToString(recipeBook.icon),
+  };
+
+  Recipe recipeFromMap(Map<String, Object?> map) {
+    List<String> recipeTypeStrings = (map[RecipeFields.recipeTypes] as String).split(Recipe.recipeTypeSeparator);
+    String imageString = map[RecipeFields.image] as String;
+
+    return Recipe(
+      id: (map[RecipeFields.id] as int?)?.toString(),
+      name: map[RecipeFields.name] as String,
+      recipeBookID: (map[RecipeFields.recipeBookID] as int).toString(),
+      preparationSteps: (map[RecipeFields.preparationSteps] as String).split(Recipe.prepStepSeparator),
+      recipeTypes: List.generate(recipeTypeStrings.length, (index) => EnumToString.fromString(RecipeType.values, recipeTypeStrings[index]) ?? RecipeType.OTHER),
+      image: imageString.isNotEmpty ? Base64Decoder().convert(imageString) : null,
+      preparationTime: map[RecipeFields.preparationTime] as int,
+      cookingTime: map[RecipeFields.cookingTime] as int,
+    );
+  }
+
+  Map<String, Object?> recipeToMap(Recipe recipe) => {
+    RecipeFields.id: recipe.id,
+    RecipeFields.name: recipe.name,
+    RecipeFields.preparationSteps: recipe.preparationSteps.join(Recipe.prepStepSeparator),
+    RecipeFields.recipeTypes: (List.generate(recipe.recipeTypes.length, (index) => EnumToString.convertToString(recipe.recipeTypes[index]))).join(Recipe.recipeTypeSeparator),
+    RecipeFields.image: recipe.image != null ? Base64Encoder().convert(recipe.image!) : "",
+    RecipeFields.preparationTime: recipe.preparationTime,
+    RecipeFields.cookingTime: recipe.cookingTime,
+    RecipeFields.recipeBookID: recipe.recipeBookID,
+  };
+
+  Ingredient ingredientFromMap(Map<String, Object?> map) {
+    return Ingredient(
+      id: (map[IngredientFields.id] as int?)?.toString(),
+      recipeID: (map[IngredientFields.recipeID] as int).toString(),
+      name: map[IngredientFields.name] as String,
+      unitAmount: UnitAmount(EnumToString.fromString(Unit.values, map[IngredientFields.unit] as String) ?? Unit.GRAM, map[IngredientFields.amount] as double),
+    );
+  }
+
+  Map<String, Object?> ingredientToMap(Ingredient ingredient) => {
+    IngredientFields.id: ingredient.id,
+    IngredientFields.name: ingredient.name,
+    IngredientFields.amount: ingredient.unitAmount.amount,
+    IngredientFields.unit: EnumToString.convertToString(ingredient.unitAmount.unit),
+    IngredientFields.recipeID: ingredient.recipeID,
+  };
+
   // ---------------------------------------------------------------------------
   // CRUD Operations for RecipeBooks
   // ---------------------------------------------------------------------------
@@ -106,8 +174,8 @@ class PersistenceService {
   Future<RecipeBook> createRecipeBook(RecipeBook recipeBook) async {
     print("Adding RecipeBook");
     final db = await instance.database;
-    final id = await db.insert(tableRecipeBooks, recipeBook.toMap());
-    return recipeBook.copy(id: id);
+    final id = await db.insert(tableRecipeBooks, recipeBookToMap(recipeBook));
+    return recipeBook.copy(id: id.toString());
   }
 
   Future<List<RecipeBook>> readAllRecipeBooks() async {
@@ -117,28 +185,28 @@ class PersistenceService {
     // final orderBy = '${NoteFields.time} ASC';
     final result = await db.query(tableRecipeBooks);
     print("All Recipe Books: \n$result");
-    return result.map((map) => RecipeBook.fromMap(map)).toList();
+    return result.map((map) => recipeBookFromMap(map)).toList();
   }
 
-  Future<int> updateRecipeBook(RecipeBook recipeBook) async {
+  Future<String> updateRecipeBook(RecipeBook recipeBook) async {
     final db = await instance.database;
 
-    return db.update(
+    return (await db.update(
       tableRecipeBooks,
-      recipeBook.toMap(),
+      recipeBookToMap(recipeBook),
       where: '${RecipeBookFields.id} = ?',
       whereArgs: [recipeBook.id],
-    );
+    )).toString();
   }
 
-  Future<int> deleteRecipeBook(int id) async {
+  Future<String> deleteRecipeBook(String id) async {
     final db = await instance.database;
 
-    return await db.delete(
+    return (await db.delete(
       tableRecipeBooks,
       where: '${RecipeBookFields.id} = ?',
       whereArgs: [id],
-    );
+    )).toString();
   }
 
 
@@ -149,8 +217,8 @@ class PersistenceService {
   Future<Recipe> createRecipe(Recipe recipe) async {
     print("Adding Recipe");
     final db = await instance.database;
-    final id = await db.insert(tableRecipes, recipe.toMap());
-    return recipe.copy(id: id);
+    final id = await db.insert(tableRecipes, recipeToMap(recipe));
+    return recipe.copy(id: id.toString());
   }
 
   Future<List<Recipe>> readAllRecipes() async {
@@ -160,10 +228,10 @@ class PersistenceService {
     // final orderBy = '${NoteFields.time} ASC';
     final result = await db.query(tableRecipes);
     print("All Recipes: \n$result");
-    return result.map((map) => Recipe.fromMap(map)).toList();
+    return result.map((map) => recipeFromMap(map)).toList();
   }
 
-  Future<List<Recipe>> readRecipesFromBook(int recipeBookID) async {
+  Future<List<Recipe>> readRecipesFromBook(String recipeBookID) async {
     final db = await instance.database;
 
     // TODO: Order?
@@ -175,41 +243,41 @@ class PersistenceService {
     );
 
     print("Recipes from Book: \n$result");
-    return result.map((map) => Recipe.fromMap(map)).toList();
+    return result.map((map) => recipeFromMap(map)).toList();
   }
 
-  Future<Recipe> readRecipe(int recipeId) async {
+  Future<Recipe> readRecipe(Recipe recipe) async {
     final db = await instance.database;
 
     final result = await db.query(
       tableRecipes,
       where: '${RecipeFields.id} = ?',
-      whereArgs: [recipeId],
-    );
-
-    print("Recipe with ID $recipeId: \n$result");
-    return Recipe.fromMap(result.first);
-  }
-
-  Future<int> updateRecipe(Recipe recipe) async {
-    final db = await instance.database;
-
-    return db.update(
-      tableRecipes,
-      recipe.toMap(),
-      where: '${RecipeFields.id} = ?',
       whereArgs: [recipe.id],
     );
+
+    print("Recipe with ID ${recipe.id}: \n$result");
+    return recipeFromMap(result.first);
   }
 
-  Future<int> deleteRecipe(int id) async {
+  Future<String> updateRecipe(Recipe recipe) async {
     final db = await instance.database;
 
-    return await db.delete(
+    return (await db.update(
+      tableRecipes,
+      recipeToMap(recipe),
+      where: '${RecipeFields.id} = ?',
+      whereArgs: [recipe.id],
+    )).toString();
+  }
+
+  Future<String> deleteRecipe(Recipe recipe) async {
+    final db = await instance.database;
+
+    return (await db.delete(
       tableRecipes,
       where: '${RecipeFields.id} = ?',
-      whereArgs: [id],
-    );
+      whereArgs: [recipe.id],
+    )).toString();
   }
 
 
@@ -217,11 +285,11 @@ class PersistenceService {
   // CRUD Operations for Ingredients
   // ---------------------------------------------------------------------------
 
-  Future<Ingredient> createIngredient(Ingredient ingredient) async {
+  Future<Ingredient> createIngredient(Ingredient ingredient, Recipe? recipe) async {
     print("Adding Ingredient");
     final db = await instance.database;
-    final id = await db.insert(tableIngredients, ingredient.toMap());
-    return ingredient.copy(id: id);
+    final id = await db.insert(tableIngredients, ingredientToMap(ingredient));
+    return ingredient.copy(id: id.toString());
   }
 
   Future<List<Ingredient>> readAllIngredient() async {
@@ -231,10 +299,10 @@ class PersistenceService {
     // final orderBy = '${NoteFields.time} ASC';
     final result = await db.query(tableIngredients);
     print("All Ingredients: \n$result");
-    return result.map((map) => Ingredient.fromMap(map)).toList();
+    return result.map((map) => ingredientFromMap(map)).toList();
   }
 
-  Future<List<Ingredient>> readIngredientsFromRecipe(int id) async {
+  Future<List<Ingredient>> readIngredientsFromRecipe(Recipe recipe) async {
     final db = await instance.database;
 
     // TODO: Order?
@@ -242,32 +310,32 @@ class PersistenceService {
     final result = await db.query(
       tableIngredients,
       where: '${IngredientFields.recipeID} = ?',
-      whereArgs: [id],
+      whereArgs: [recipe.id],
     );
 
     print("Ingredients from Recipe: \n$result");
-    return result.map((map) => Ingredient.fromMap(map)).toList();
+    return result.map((map) => ingredientFromMap(map)).toList();
   }
 
-  Future<int> updateIngredient(Ingredient ingredient) async {
+  Future<String> updateIngredient(Ingredient ingredient, Recipe? recipe) async {
     final db = await instance.database;
 
-    return db.update(
+    return (await db.update(
       tableIngredients,
-      ingredient.toMap(),
+      ingredientToMap(ingredient),
       where: '${IngredientFields.id} = ?',
       whereArgs: [ingredient.id],
-    );
+    )).toString();
   }
 
-  Future<int> deleteIngredient(int id) async {
+  Future<String> deleteIngredient(String ingredientId, Recipe? recipe) async {
     final db = await instance.database;
 
-    return await db.delete(
+    return (await db.delete(
       tableIngredients,
       where: '${IngredientFields.id} = ?',
-      whereArgs: [id],
-    );
+      whereArgs: [ingredientId],
+    )).toString();
   }
 
 
@@ -312,7 +380,7 @@ class PersistenceService {
     // Ingredients
     List<Ingredient> ingredients = await getDemoIngredients();
     for (Ingredient ingredient in ingredients) {
-      await createIngredient(ingredient);
+      await createIngredient(ingredient, null);
     }
   }
 }

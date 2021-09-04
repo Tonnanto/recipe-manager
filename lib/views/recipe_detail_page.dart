@@ -1,13 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:recipe_manager/models/recipe_model.dart';
+import 'package:recipe_manager/utilities/data_service.dart';
 import 'package:recipe_manager/utilities/persistence.dart';
 import 'package:recipe_manager/views/edit_recipe_page.dart';
 
 class RecipeDetailPage extends StatefulWidget {
-  final int recipeId;
+  final Recipe recipe;
 
-  RecipeDetailPage({Key? key, required this.recipeId}) : super(key: key);
+  RecipeDetailPage({Key? key, required this.recipe}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _RecipeDetailPageState();
@@ -27,7 +28,7 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
   Future refreshRecipe() async {
     setState(() => isLoading = true);
 
-    this.recipe = await PersistenceService.instance.readRecipe(widget.recipeId);
+    this.recipe = await DataService.instance.readRecipe(widget.recipe);
     await this.recipe?.loadIngredients();
 
     setState(() => isLoading = false);

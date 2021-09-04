@@ -1,8 +1,6 @@
-import 'dart:convert';
 import 'dart:typed_data';
-import 'package:enum_to_string/enum_to_string.dart';
 import 'package:recipe_manager/models/ingredient_model.dart';
-import 'package:recipe_manager/utilities/persistence.dart';
+import 'package:recipe_manager/utilities/data_service.dart';
 
 
 final String tableRecipes = 'recipes';
@@ -10,9 +8,9 @@ final String tableRecipes = 'recipes';
 class Recipe {
 
   final String name;
-  final int? id;
+  final String? id;
 
-  final int recipeBookID;
+  final String recipeBookID;
 
   final List<String> preparationSteps;
   final List<RecipeType> recipeTypes;
@@ -39,75 +37,47 @@ class Recipe {
   /// Updates the ingredients field with data from the database
   Future<List<Ingredient>> loadIngredients() async {
     if (this.id != null) {
-      this.ingredients = await PersistenceService.instance.readIngredientsFromRecipe(this.id!);
+      this.ingredients = await DataService.instance.readIngredientsFromRecipe(this);
     }
     return ingredients;
   }
 
   /// Updates the database with new ingredients for this recipe
   Future<Iterable<Ingredient>> updateIngredients(Iterable<Ingredient> newIngredients) async {
-    Iterable<int> oldIngredientIds = (await loadIngredients()).map((e) => e.id!);
+    Iterable<String> oldIngredientIds = (await loadIngredients()).map((e) => e.id!);
 
     // Update and add new ingredients
     for (Ingredient ingredient in newIngredients) {
       if (ingredient.id != null && oldIngredientIds.contains(ingredient.id!)) {
         // If id is known -> update ingredient in db
-        await PersistenceService.instance.updateIngredient(ingredient.copy(recipeID: this.id));
+        await DataService.instance.updateIngredient(ingredient.copy(recipeID: this.id), this);
 
       } else {
         // If id is unknown or no id created yet -> add ingredient to db
-        await PersistenceService.instance.createIngredient(ingredient.copy(recipeID: this.id));
+        await DataService.instance.createIngredient(ingredient.copy(recipeID: this.id), this);
       }
     }
 
     // Delete old ingredients that are not in newIngredients
-    for (int oldIngredientId in oldIngredientIds) {
+    for (String oldIngredientId in oldIngredientIds) {
       if (!newIngredients.map((e) => e.id).contains(oldIngredientId)) {
-        PersistenceService.instance.deleteIngredient(oldIngredientId);
+        DataService.instance.deleteIngredient(oldIngredientId, this);
       }
     }
 
     return newIngredients;
   }
 
-  static Recipe fromMap(Map<String, Object?> map) {
-
-    List<String> recipeTypeStrings = (map[RecipeFields.recipeTypes] as String).split(recipeTypeSeparator);
-    String imageString = map[RecipeFields.image] as String;
-
-    return Recipe(
-      id: map[RecipeFields.id] as int?,
-      name: map[RecipeFields.name] as String,
-      recipeBookID: map[RecipeFields.recipeBookID] as int,
-      preparationSteps: (map[RecipeFields.preparationSteps] as String).split(prepStepSeparator),
-      recipeTypes: List.generate(recipeTypeStrings.length, (index) => EnumToString.fromString(RecipeType.values, recipeTypeStrings[index]) ?? RecipeType.OTHER),
-      image: imageString.isNotEmpty ? Base64Decoder().convert(imageString) : null,
-      preparationTime: map[RecipeFields.preparationTime] as int,
-      cookingTime: map[RecipeFields.cookingTime] as int,
-    );
-  }
-
-  Map<String, Object?> toMap() => {
-    RecipeFields.id: id,
-    RecipeFields.name: name,
-    RecipeFields.preparationSteps: preparationSteps.join(prepStepSeparator),
-    RecipeFields.recipeTypes: (List.generate(recipeTypes.length, (index) => EnumToString.convertToString(recipeTypes[index]))).join(recipeTypeSeparator),
-    RecipeFields.image: image != null ? Base64Encoder().convert(image!) : "",
-    RecipeFields.preparationTime: preparationTime,
-    RecipeFields.cookingTime: cookingTime,
-    RecipeFields.recipeBookID: recipeBookID,
-  };
-
   /// Returns a copy of the same Recipe with the given fields changed
   Recipe copy({
-    int? id,
+    String? id,
     String? name,
     List<String>? preparationSteps,
     List<RecipeType>? recipeTypes,
     Uint8List? image,
     int? preparationTime,
     int? cookingTime,
-    int? recipeBookID,
+    String? recipeBookID,
   }) {
     Recipe copy = Recipe(
       id: id ?? this.id,

@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:recipe_manager/models/recipe_book_model.dart';
-import 'package:recipe_manager/utilities/persistence.dart';
+import 'package:recipe_manager/utilities/data_service.dart';
 import 'package:recipe_manager/views/recipe_list_page.dart';
 
 import 'edit_recipe_book_page.dart';
@@ -31,7 +31,7 @@ class _RecipeBookListPageState extends State<RecipeBookListPage> {
   /// Refreshes Data from DB and updates UI
   Future _refreshRecipeBooks() async {
     setState(() => isLoading = true);
-    this.recipeBooks = await PersistenceService.instance.readAllRecipeBooks();
+    this.recipeBooks = await DataService.instance.readAllRecipeBooks();
     setState(() => isLoading = false);
   }
 
@@ -65,7 +65,7 @@ class _RecipeBookListPageState extends State<RecipeBookListPage> {
     }
     return PageView.builder(
         itemCount: recipeBooks.length,
-        controller: PageController(viewportFraction: 0.55),
+        controller: PageController(viewportFraction: 250 / (MediaQuery.of(context).size.width)),
         itemBuilder: (BuildContext context, int index) {
           return _buildRecipeBookColumn(index);
         });
@@ -153,7 +153,7 @@ class _RecipeBookListPageState extends State<RecipeBookListPage> {
         icon: Icon(Icons.restore),
         label: Text("Reset Demo Recipes"),
         onPressed: () {
-          PersistenceService.instance.resetDemoData().then((_) {
+          DataService.instance.resetDemoData().then((_) {
             _refreshRecipeBooks();
             Navigator.of(context).pop();
           });
@@ -168,7 +168,7 @@ class _RecipeBookListPageState extends State<RecipeBookListPage> {
         icon: Icon(Icons.delete_outline),
         label: Text("Delete all Data"),
         onPressed: () {
-          PersistenceService.instance.deleteAllData().then((_) {
+          DataService.instance.deleteAllData().then((_) {
             _refreshRecipeBooks();
             Navigator.of(context).pop();
           });

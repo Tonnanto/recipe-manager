@@ -82,8 +82,7 @@ class _RecipeListPageState extends State<RecipeListPage> {
   void _pushRecipeDetailPage(int index) {
     Navigator.of(context).push(
         MaterialPageRoute(builder: (BuildContext context) {
-          final _recipe = widget.recipeBook.recipes[index];
-          return RecipeDetailPage(recipeId: _recipe.id!);
+          return RecipeDetailPage(recipe: widget.recipeBook.recipes[index]);
         })
     ).then((value) => _refreshData());
   }

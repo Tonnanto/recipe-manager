@@ -4,16 +4,15 @@ import 'dart:async';
 import 'dart:typed_data';
 import 'dart:ui';
 
-import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/services.dart';
 import 'package:recipe_manager/models/recipe_model.dart';
+import 'package:recipe_manager/utilities/data_service.dart';
 import 'package:recipe_manager/utilities/image_utils.dart';
-import 'package:recipe_manager/utilities/persistence.dart';
 
 final String tableRecipeBooks = 'recipe_books';
 
 class RecipeBook {
-  final int? id;
+  final String? id;
   final String name;
 
   final RecipeBookColor color;
@@ -34,28 +33,14 @@ class RecipeBook {
   /// Updates the recipes field with data from the database
   Future<List<Recipe>> loadRecipes() async {
     if (this.id != null) {
-      this.recipes = await PersistenceService.instance.readRecipesFromBook(this.id!);
+      this.recipes = await DataService.instance.readRecipesFromBook(this.id!);
     }
     return recipes;
   }
 
-  static RecipeBook fromMap(Map<String, Object?> map) => RecipeBook(
-    id: map[RecipeBookFields.id] as int?,
-    name: map[RecipeBookFields.name] as String,
-    color: EnumToString.fromString(RecipeBookColor.values, map[RecipeBookFields.color] as String) ?? RecipeBookColor.flora,
-    icon: EnumToString.fromString(RecipeBookIcon.values, map[RecipeBookFields.icon] as String) ?? RecipeBookIcon.ingredients,
-  );
-
-  Map<String, Object?> toMap() => {
-    RecipeBookFields.id: id,
-    RecipeBookFields.name: name,
-    RecipeBookFields.color: EnumToString.convertToString(color),
-    RecipeBookFields.icon: EnumToString.convertToString(icon),
-  };
-
   /// Returns a copy of the same RecipeBook with the given fields changed
   RecipeBook copy({
-    int? id,
+    String? id,
     String? name,
     RecipeBookColor? color,
     RecipeBookIcon? icon,

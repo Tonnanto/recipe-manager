@@ -9,7 +9,7 @@ import 'ingredient_model.dart';
 /// Returns some demo recipe books
 Future<List<RecipeBook>> getDemoRecipeBooks() async {
   RecipeBook recipeBook1 = RecipeBook(
-      id: 1,
+      id: '1',
       name: "Antons Recipes",
       color: RecipeBookColor.banana,
       icon: RecipeBookIcon.cooking_hat);
@@ -37,9 +37,9 @@ Future<List<RecipeBook>> getDemoRecipeBooks() async {
 /// Returns some demo recipes
 Future<List<Recipe>> getDemoRecipes() async {
   Recipe recipe1 = Recipe(
-      id: 1,
+      id: '1',
       name: "Bircher Müsli",
-      recipeBookID: 1,
+      recipeBookID: '1',
       preparationSteps: [
         "Haferflocken mit Sahne, Milch, Agaven Sirup und Naturjoghurt mischen und über Nacht zugedeckt ziehen lassen.",
         "6-Korn-Mischung in den Thermomix geben und 20 Sekunden/Stufe 7 schroten. Mit kaltem Wasser bedeckt im Mixtopf über Nacht ziehen lassen.",
@@ -57,9 +57,9 @@ Future<List<Recipe>> getDemoRecipes() async {
   );
 
   Recipe recipe2 = Recipe(
-      id: 2,
+      id: '2',
       name: "Salami, Jalapeño & Olive Pizza with Honey",
-      recipeBookID: 1,
+      recipeBookID: '1',
       preparationSteps: [
         "Heat oven to 500° F.",
         "Let pizza dough come to room temperature for 30 minutes before rolling out onto a lightly !oured surface with a rolling pin.",
@@ -81,9 +81,9 @@ Future<List<Recipe>> getDemoRecipes() async {
   );
 
   Recipe recipe3 = Recipe(
-      id: 3,
+      id: '3',
       name: "Fluffige Taler zum eintunken: Zucchinipuffer mit Feta und Tzatziki",
-      recipeBookID: 1,
+      recipeBookID: '1',
       preparationSteps: [
         "Zucchini trimmen und raspeln. In ein Sieb geben und mit 1 EL Salz vermengen, ca. 5 Minuten ziehen lassen.",
         "Feta zerkrümeln. Dill, Petersilie und Jalapeno hacken. Ei verquirlen",
@@ -100,9 +100,9 @@ Future<List<Recipe>> getDemoRecipes() async {
   );
 
   Recipe recipe4 = Recipe(
-      id: 4,
+      id: '4',
       name: "Beste Moussaka",
-      recipeBookID: 1,
+      recipeBookID: '1',
       preparationSteps: [
         "Die Auberginen und die Zucchini in ca 0,5 cm dicke Scheiben schneiden, mit Salz bestreuen und ca 20 - 30 Minuten Flüssigkeit entziehen lassen.",
         "Währenddessen das Hackfleisch mit Olivenöl krümelig braten. Dann die klein geschnittenen Karotten, Zwiebeln und Knoblauch hinzugeben und ca. 2 Minuten mitbraten. Danach Kreuzkümmel, Paprikapulver, 1 EL Gemüsebrühe, Oregano und Pfeffer dazugeben und alles gut miteinander vermischen. Mit geschlossenem Deckel ca. 2 Minuten weiter dünsten. Danach die geschälten Tomaten samt Saft hinzugeben und mit einem Küchenhelfer in der Pfanne zerstückeln. Dann nochmals ca 3 - 4 Minuten weiter dünsten. Die Pfanne mit geschlossenem Deckel beiseite stellen und die Gewürze einziehen lassen.",
@@ -122,9 +122,9 @@ Future<List<Recipe>> getDemoRecipes() async {
   );
 
   Recipe recipe5 = Recipe(
-      id: 5,
+      id: '5',
       name: "Türkischer Brotschmaus",
-      recipeBookID: 1,
+      recipeBookID: '1',
       preparationSteps: [
         "Knoblauch und Petersilie 8 Sek./ Stufe 5",
         "Schafskäse dazu und 10 Sek./ Stufe 4",
@@ -150,64 +150,64 @@ Future<List<Recipe>> getDemoRecipes() async {
 Future<List<Ingredient>> getDemoIngredients() async {
   return [
     // Recipe 1: Bircher Müsli
-    Ingredient(name: "Haferflocken", unitAmount: UnitAmount(Unit.GRAM, 150), recipeID: 1),
-    Ingredient(name: "Sahne", unitAmount: UnitAmount(Unit.MILLI_LITRE, 200), recipeID: 1),
-    Ingredient(name: "Milch", unitAmount: UnitAmount(Unit.MILLI_LITRE, 200), recipeID: 1),
-    Ingredient(name: "Agaven Sirup oder Honig", unitAmount: UnitAmount(Unit.GRAM, 60), recipeID: 1),
-    Ingredient(name: "Naturjoghurt", unitAmount: UnitAmount(Unit.GRAM, 150), recipeID: 1),
-    Ingredient(name: "6-Korn-Mischung", unitAmount: UnitAmount(Unit.GRAM, 80), recipeID: 1),
-    Ingredient(name: "Mandeln", unitAmount: UnitAmount(Unit.GRAM, 60), recipeID: 1),
-    Ingredient(name: "Apfel", unitAmount: UnitAmount(Unit.PCS, 1), recipeID: 1),
-    Ingredient(name: "Banane", unitAmount: UnitAmount(Unit.PCS, 2), recipeID: 1),
+    Ingredient(name: "Haferflocken", unitAmount: UnitAmount(Unit.GRAM, 150), recipeID: '1'),
+    Ingredient(name: "Sahne", unitAmount: UnitAmount(Unit.MILLI_LITRE, 200), recipeID: '1'),
+    Ingredient(name: "Milch", unitAmount: UnitAmount(Unit.MILLI_LITRE, 200), recipeID: '1'),
+    Ingredient(name: "Agaven Sirup oder Honig", unitAmount: UnitAmount(Unit.GRAM, 60), recipeID: '1'),
+    Ingredient(name: "Naturjoghurt", unitAmount: UnitAmount(Unit.GRAM, 150), recipeID: '1'),
+    Ingredient(name: "6-Korn-Mischung", unitAmount: UnitAmount(Unit.GRAM, 80), recipeID: '1'),
+    Ingredient(name: "Mandeln", unitAmount: UnitAmount(Unit.GRAM, 60), recipeID: '1'),
+    Ingredient(name: "Apfel", unitAmount: UnitAmount(Unit.PCS, 1), recipeID: '1'),
+    Ingredient(name: "Banane", unitAmount: UnitAmount(Unit.PCS, 2), recipeID: '1'),
 
     // Recipe 2: Salami, Jalapeño & Olive Pizza with Honey
-    Ingredient(name: "Pizza Dough", unitAmount: UnitAmount(Unit.GRAM, 454), recipeID: 2),
-    Ingredient(name: "Pizza Sauce", unitAmount: UnitAmount(Unit.GRAM, 400), recipeID: 2),
-    Ingredient(name: "Mozzarella", unitAmount: UnitAmount(Unit.GRAM, 375), recipeID: 2),
-    Ingredient(name: "Salami", unitAmount: UnitAmount(Unit.PCS, 20), recipeID: 2),
-    Ingredient(name: "Red Onion", unitAmount: UnitAmount(Unit.PCS, 0.25), recipeID: 2),
-    Ingredient(name: "Jalapeño", unitAmount: UnitAmount(Unit.PCS, 1), recipeID: 2),
-    Ingredient(name: "Castelvetrano olives", unitAmount: UnitAmount(Unit.GRAM, 120), recipeID: 2),
-    Ingredient(name: "Olive oil", unitAmount: UnitAmount(Unit.MILLI_LITRE, 20), recipeID: 2),
-    Ingredient(name: "Honey", unitAmount: UnitAmount(Unit.MILLI_LITRE, 60), recipeID: 2),
-    Ingredient(name: "Red Pepper flakes", unitAmount: UnitAmount(Unit.GRAM, 5), recipeID: 2),
+    Ingredient(name: "Pizza Dough", unitAmount: UnitAmount(Unit.GRAM, 454), recipeID: '2'),
+    Ingredient(name: "Pizza Sauce", unitAmount: UnitAmount(Unit.GRAM, 400), recipeID: '2'),
+    Ingredient(name: "Mozzarella", unitAmount: UnitAmount(Unit.GRAM, 375), recipeID: '2'),
+    Ingredient(name: "Salami", unitAmount: UnitAmount(Unit.PCS, 20), recipeID: '2'),
+    Ingredient(name: "Red Onion", unitAmount: UnitAmount(Unit.PCS, 0.25), recipeID: '2'),
+    Ingredient(name: "Jalapeño", unitAmount: UnitAmount(Unit.PCS, 1), recipeID: '2'),
+    Ingredient(name: "Castelvetrano olives", unitAmount: UnitAmount(Unit.GRAM, 120), recipeID: '2'),
+    Ingredient(name: "Olive oil", unitAmount: UnitAmount(Unit.MILLI_LITRE, 20), recipeID: '2'),
+    Ingredient(name: "Honey", unitAmount: UnitAmount(Unit.MILLI_LITRE, 60), recipeID: '2'),
+    Ingredient(name: "Red Pepper flakes", unitAmount: UnitAmount(Unit.GRAM, 5), recipeID: '2'),
 
     // Recipe 3: Fluffige Taler zum eintunken: Zucchinipuffer mit Feta und Tzatziki
-    Ingredient(name: "Zucchini", unitAmount: UnitAmount(Unit.GRAM, 450), recipeID: 3),
-    Ingredient(name: "Feta", unitAmount: UnitAmount(Unit.GRAM, 150), recipeID: 3),
-    Ingredient(name: "Dill", unitAmount: UnitAmount(Unit.GRAM, 60), recipeID: 3),
-    Ingredient(name: "Petersilie", unitAmount: UnitAmount(Unit.GRAM, 40), recipeID: 3),
-    Ingredient(name: "Ei", unitAmount: UnitAmount(Unit.PCS, 1), recipeID: 3),
-    Ingredient(name: "Mehl", unitAmount: UnitAmount(Unit.GRAM, 30), recipeID: 3),
-    Ingredient(name: "Öl", unitAmount: UnitAmount(Unit.TABLE_SPOON, 2), recipeID: 3),
-    Ingredient(name: "Tzatziki", unitAmount: UnitAmount(Unit.GRAM, 200), recipeID: 3),
+    Ingredient(name: "Zucchini", unitAmount: UnitAmount(Unit.GRAM, 450), recipeID: '3'),
+    Ingredient(name: "Feta", unitAmount: UnitAmount(Unit.GRAM, 150), recipeID: '3'),
+    Ingredient(name: "Dill", unitAmount: UnitAmount(Unit.GRAM, 60), recipeID: '3'),
+    Ingredient(name: "Petersilie", unitAmount: UnitAmount(Unit.GRAM, 40), recipeID: '3'),
+    Ingredient(name: "Ei", unitAmount: UnitAmount(Unit.PCS, 1), recipeID: '3'),
+    Ingredient(name: "Mehl", unitAmount: UnitAmount(Unit.GRAM, 30), recipeID: '3'),
+    Ingredient(name: "Öl", unitAmount: UnitAmount(Unit.TABLE_SPOON, 2), recipeID: '3'),
+    Ingredient(name: "Tzatziki", unitAmount: UnitAmount(Unit.GRAM, 200), recipeID: '3'),
 
     // Recipe 4: Beste Moussaka
-    Ingredient(name: "Hackfleisch, gemischt", unitAmount: UnitAmount(Unit.GRAM, 500), recipeID: 4),
-    Ingredient(name: "Auberginen", unitAmount: UnitAmount(Unit.PCS, 2), recipeID: 4),
-    Ingredient(name: "Zucchini", unitAmount: UnitAmount(Unit.PCS, 2), recipeID: 4),
-    Ingredient(name: "Karotten", unitAmount: UnitAmount(Unit.PCS, 2), recipeID: 4),
-    Ingredient(name: "Zwiebel", unitAmount: UnitAmount(Unit.PCS, 2), recipeID: 4),
-    Ingredient(name: "geschläte Tomaten", unitAmount: UnitAmount(Unit.GRAM, 350), recipeID: 4),
-    Ingredient(name: "Knoblauch", unitAmount: UnitAmount(Unit.PCS, 3), recipeID: 4),
-    Ingredient(name: "Kreuzkümmel", unitAmount: UnitAmount(Unit.TEA_SPOON, 0.5), recipeID: 4),
-    Ingredient(name: "Paprikapulver, mild", unitAmount: UnitAmount(Unit.TEA_SPOON, 1), recipeID: 4),
-    Ingredient(name: "Gemüsebrühe", unitAmount: UnitAmount(Unit.TABLE_SPOON, 2), recipeID: 4),
-    Ingredient(name: "Salz", unitAmount: UnitAmount(Unit.SPRINKLE, 2), recipeID: 4),
-    Ingredient(name: "Pfeffer, dunkel", unitAmount: UnitAmount(Unit.SPRINKLE, 2), recipeID: 4),
-    Ingredient(name: "Muskatnuss, frisch gerieben", unitAmount: UnitAmount(Unit.SPRINKLE, 1), recipeID: 4),
-    Ingredient(name: "Mozzarella", unitAmount: UnitAmount(Unit.GRAM, 250), recipeID: 4),
-    Ingredient(name: "Magerquark", unitAmount: UnitAmount(Unit.GRAM, 250), recipeID: 4),
-    Ingredient(name: "Oregano", unitAmount: UnitAmount(Unit.TABLE_SPOON, 1), recipeID: 4),
-    Ingredient(name: "Eier", unitAmount: UnitAmount(Unit.PCS, 3), recipeID: 4),
-    Ingredient(name: "Olivenöl", unitAmount: UnitAmount(Unit.MILLI_LITRE, 40), recipeID: 4),
-    Ingredient(name: "Milch", unitAmount: UnitAmount(Unit.MILLI_LITRE, 150), recipeID: 4),
+    Ingredient(name: "Hackfleisch, gemischt", unitAmount: UnitAmount(Unit.GRAM, 500), recipeID: '4'),
+    Ingredient(name: "Auberginen", unitAmount: UnitAmount(Unit.PCS, 2), recipeID: '4'),
+    Ingredient(name: "Zucchini", unitAmount: UnitAmount(Unit.PCS, 2), recipeID: '4'),
+    Ingredient(name: "Karotten", unitAmount: UnitAmount(Unit.PCS, 2), recipeID: '4'),
+    Ingredient(name: "Zwiebel", unitAmount: UnitAmount(Unit.PCS, 2), recipeID: '4'),
+    Ingredient(name: "geschläte Tomaten", unitAmount: UnitAmount(Unit.GRAM, 350), recipeID: '4'),
+    Ingredient(name: "Knoblauch", unitAmount: UnitAmount(Unit.PCS, 3), recipeID: '4'),
+    Ingredient(name: "Kreuzkümmel", unitAmount: UnitAmount(Unit.TEA_SPOON, 0.5), recipeID: '4'),
+    Ingredient(name: "Paprikapulver, mild", unitAmount: UnitAmount(Unit.TEA_SPOON, 1), recipeID: '4'),
+    Ingredient(name: "Gemüsebrühe", unitAmount: UnitAmount(Unit.TABLE_SPOON, 2), recipeID: '4'),
+    Ingredient(name: "Salz", unitAmount: UnitAmount(Unit.SPRINKLE, 2), recipeID: '4'),
+    Ingredient(name: "Pfeffer, dunkel", unitAmount: UnitAmount(Unit.SPRINKLE, 2), recipeID: '4'),
+    Ingredient(name: "Muskatnuss, frisch gerieben", unitAmount: UnitAmount(Unit.SPRINKLE, 1), recipeID: '4'),
+    Ingredient(name: "Mozzarella", unitAmount: UnitAmount(Unit.GRAM, 250), recipeID: '4'),
+    Ingredient(name: "Magerquark", unitAmount: UnitAmount(Unit.GRAM, 250), recipeID: '4'),
+    Ingredient(name: "Oregano", unitAmount: UnitAmount(Unit.TABLE_SPOON, 1), recipeID: '4'),
+    Ingredient(name: "Eier", unitAmount: UnitAmount(Unit.PCS, 3), recipeID: '4'),
+    Ingredient(name: "Olivenöl", unitAmount: UnitAmount(Unit.MILLI_LITRE, 40), recipeID: '4'),
+    Ingredient(name: "Milch", unitAmount: UnitAmount(Unit.MILLI_LITRE, 150), recipeID: '4'),
 
     // Recipe 5: Türkischer Brotschmaus
-    Ingredient(name: "Knoblauch", unitAmount: UnitAmount(Unit.PCS, 1), recipeID: 5),
-    Ingredient(name: "Petersilie", unitAmount: UnitAmount(Unit.GRAM, 50), recipeID: 5),
-    Ingredient(name: "Schafskäse", unitAmount: UnitAmount(Unit.GRAM, 100), recipeID: 5),
-    Ingredient(name: "Ajvar", unitAmount: UnitAmount(Unit.GRAM, 100), recipeID: 5),
-    Ingredient(name: "Frischkäse", unitAmount: UnitAmount(Unit.GRAM, 200), recipeID: 5),
+    Ingredient(name: "Knoblauch", unitAmount: UnitAmount(Unit.PCS, 1), recipeID: '5'),
+    Ingredient(name: "Petersilie", unitAmount: UnitAmount(Unit.GRAM, 50), recipeID: '5'),
+    Ingredient(name: "Schafskäse", unitAmount: UnitAmount(Unit.GRAM, 100), recipeID: '5'),
+    Ingredient(name: "Ajvar", unitAmount: UnitAmount(Unit.GRAM, 100), recipeID: '5'),
+    Ingredient(name: "Frischkäse", unitAmount: UnitAmount(Unit.GRAM, 200), recipeID: '5'),
   ];
 }
