@@ -39,7 +39,7 @@ abstract class DataService {
 
   Future<Recipe> createRecipe(Recipe recipe);
 
-  Future<List<Recipe>> readAllRecipes();
+  // Future<List<Recipe>> readAllRecipes();
 
   Future<List<Recipe>> readRecipesFromBook(String recipeBookID);
 
@@ -56,7 +56,7 @@ abstract class DataService {
 
   Future<Ingredient> createIngredient(Ingredient ingredient, Recipe recipe);
 
-  Future<List<Ingredient>> readAllIngredient();
+  // Future<List<Ingredient>> readAllIngredient();
 
   Future<List<Ingredient>> readIngredientsFromRecipe(Recipe recipe);
 
