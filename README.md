@@ -4,7 +4,7 @@ An app that manages all your recipes.
 
 This app has been built as part of a project for university.
 v0.1 only serves that purpose. 
-Development wil continue in the future to fully implement all planned features and have a production ready application.
+Development will continue in the future to fully implement all planned features and have a production ready application.
 
 ## Author
 - [@Tonnanto](https://www.github.com/Tonnanto)
