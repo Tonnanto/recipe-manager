@@ -38,3 +38,10 @@ Development will continue in the future to fully implement all planned features 
 - iOS and Android only use a local SQLite Database on the device to persist data.
 - The Web Application is connected to a Google Firestore Database (NoSQL).
 - In the future every platform will be connected to the same Firestore Database (to allow sharing) and mobile devices will additionally use local databases for offline use.
+
+## Build and run
+- Open this project (Preferably in Android Studio)
+    - Flutter and Flutter Plugin for Android Studio must be installed
+- Run `dart pub get`
+- Select a device (android emulator, an iOS simulator or a browser)
+- Run `main.dart`
